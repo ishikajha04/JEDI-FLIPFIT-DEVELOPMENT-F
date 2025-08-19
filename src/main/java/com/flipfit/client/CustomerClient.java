@@ -10,6 +10,5 @@ public class CustomerClient {
         System.out.println("Update Customer"+business.updateCustomer(101));
         System.out.println("Delete Customer"+business.deleteCustomer(102));
 
-        business.listcustomer();
     }
 }
