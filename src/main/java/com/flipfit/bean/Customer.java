@@ -1,53 +1,47 @@
 package com.flipfit.bean;
 
-public class Customer extends User{
-    private String name;
-    private String phoneNumber;
-    private int age;
-    private String address;
+import java.util.Date;
+import java.util.List;
 
-    public Customer(String email, String password, String roleName, String name, String phoneNumber, int age, String address) {
-        super(email, password, roleName);
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.age = age;
-        this.address = address;
-    }
+public class Customer extends User {
+    private int customerId;
 
     public Customer() {
         super();
     }
 
-    public String getName() {
-        return name;
+    public Customer(String name, String email, String phoneNumber, int customerId) {
+        super(name, email, phoneNumber);
+        this.customerId = customerId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void register() {
     }
 
-    public int getAge() {
-        return age;
+    public List<GymCenter> viewCenters() {
+        return null;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public List<Slot> viewAvailability(String day, int centerId) {
+        return null;
     }
 
-    public String getAddress() {
-        return address;
+    public Booking bookSlot() {
+        return null;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void cancelBooking() {
     }
 
+    public List<Booking> viewPlan(Date date) {
+        return null;
+    }
 }

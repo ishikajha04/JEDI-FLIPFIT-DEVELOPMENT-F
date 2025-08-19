@@ -1,62 +1,42 @@
 package com.flipfit.bean;
 
-public class GymOwner extends User{
-    private String name;
-    private String phoneNumber;
-    private String aadharNumber;
-    private String panNumber;
-    private boolean isVerified;
+public class GymOwner extends User {
+    private int ownerId;
+    private boolean isApproved;
 
-    public GymOwner(String email, String password, String roleId, String name, String phoneNumber, String aadharNumber, String panNumber) {
-        super(email, password, roleId);
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.aadharNumber = aadharNumber;
-        this.panNumber = panNumber;
-        this.isVerified= false;
-    }
 
     public GymOwner() {
         super();
     }
 
-    public String getName() {
-        return name;
+    public GymOwner(String name, String email, String phoneNumber, int ownerId, boolean isApproved) {
+        super(name, email, phoneNumber);
+        this.ownerId = ownerId;
+        this.isApproved = isApproved;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getOwnerId() {
+        return ownerId;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public boolean isApproved() {
+        return isApproved;
     }
 
-    public String getAadharNumber() {
-        return aadharNumber;
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 
-    public void setAadharNumber(String aadharNumber) {
-        this.aadharNumber = aadharNumber;
+    public void registerCenter() {
     }
 
-    public String getPanNumber() {
-        return panNumber;
+    public void removeCenter() {
     }
 
-    public void setPanNumber(String panNumber) {
-        this.panNumber = panNumber;
+    public void createBooking() {
     }
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean isVerified) {
-        this.isVerified = isVerified;
-    }
-
 }
