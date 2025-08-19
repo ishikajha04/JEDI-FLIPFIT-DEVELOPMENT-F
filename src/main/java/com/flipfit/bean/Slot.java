@@ -1,83 +1,80 @@
 package com.flipfit.bean;
 
+import java.util.Date;
+
 public class Slot {
-    private String slotId;
-    private String gymId;
-    private String startTime;
-    private String endTime;
-    private String trainer;
-    private int numOfSeats;
-    private int numOfSeatsBooked;
+    private int slotId;
+    private int startTime;
+    private int seatCapacity;
+    private Date date;
+    private int centerId;
+    private boolean isDisabled;
 
-    public Slot()
-    {
-
+    public Slot() {
     }
 
-    public Slot(String slotId,String startTime,String endTime,int numOfSeats,String trainer,String gymId)
-    {
-        this.slotId=slotId;
-        this.startTime=startTime;
-        this.endTime=endTime;
-        this.numOfSeats=numOfSeats;
-        this.trainer=trainer;
-        this.gymId=gymId;
-        this.numOfSeatsBooked=0;
+    public Slot(int slotId, int startTime, int seatCapacity, Date date, int centerId, boolean isDisabled) {
+        this.slotId = slotId;
+        this.startTime = startTime;
+        this.seatCapacity = seatCapacity;
+        this.date = date;
+        this.centerId = centerId;
+        this.isDisabled = isDisabled;
     }
-    public String getSlotId() {
+
+    public int getSlotId() {
         return slotId;
     }
 
-    public void setSlotId(String slotId) {
+    public void setSlotId(int slotId) {
         this.slotId = slotId;
     }
 
-    public String getStartTime() {
+    public int getStartTime() {
         return startTime;
     }
 
-    public void setNumOfSeatsBooked(int numOfSeatsBooked)
-    {
-        this.numOfSeatsBooked=numOfSeatsBooked;
-    }
-
-    public int getNumOfSeatsBooked()
-    {
-        return numOfSeatsBooked;
-    }
-
-    public void setStartTime(String startTime) {
+    public void setStartTime(int startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public int getSeatCapacity() {
+        return seatCapacity;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setSeatCapacity(int seatCapacity) {
+        this.seatCapacity = seatCapacity;
     }
 
-    public int getNumOfSeats() {
-        return numOfSeats;
+    public Date getDate() {
+        return date;
     }
 
-    public void setNumOfSeats(int numOfSeats) {
-        this.numOfSeats = numOfSeats;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getTrainer() {
-        return trainer;
+    public int getCenterId() {
+        return centerId;
     }
 
-    public void setTrainer(String trainer) {
-        this.trainer = trainer;
-    }
-    public String getGymId() {
-        return gymId;
+    public void setCenterId(int centerId) {
+        this.centerId = centerId;
     }
 
-    public void setGymId(String gymId) {
-        this.gymId = gymId;
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
+    }
+
+    public boolean isSlotAvailable() {
+        return false;
+    }
+
+    public boolean bookSlot() {
+        return false;
     }
 }

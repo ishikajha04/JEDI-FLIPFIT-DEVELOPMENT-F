@@ -2,9 +2,18 @@ package com.flipfit.bean;
 import java.util.Date;
 
 public class Booking {
-    private String bookingId;
-    private String slotId;
-    private String gymId;
+    public enum BookingStatusEnum {
+        CONFIRMED,
+        WAITLISTED,
+        CANCELLED
+    }
+
+    private int bookingId;
+    private int userId;
+    private int slotId;
+    private int centerId;
+    private BookingStatusEnum bookingStatus;
+
     private String type;
     private Date date;
     private String customerEmail;
@@ -13,39 +22,38 @@ public class Booking {
         super();
     }
 
-    public Booking(String bookingId,String slotId,String gymId,String type,Date date,String customerEmail)
+    public Booking(int bookingId, int userId, int slotId, int centerId, BookingStatusEnum bookingStatus, String type,Date date,String customerEmail)
     {
         this.bookingId=bookingId;
         this.slotId=slotId;
-        this.gymId=gymId;
+        this.centerId=centerId;
         this.type=type;
         this.date=date;
         this.customerEmail=customerEmail;
     }
 
-
-    public String getBookingId() {
+    public int getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(String bookingId) {
+    public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
     }
 
-    public String getSlotId() {
+    public int getSlotId() {
         return slotId;
     }
 
-    public void setSlotId(String slotId) {
+    public void setSlotId(int slotId) {
         this.slotId = slotId;
     }
 
-    public String getGymId() {
-        return gymId;
+    public int getCenterId() {
+        return centerId;
     }
 
-    public void setGymId(String gymId) {
-        this.gymId = gymId;
+    public void setCenterId(int centerId) {
+        this.centerId = centerId;
     }
 
     public String getType() {

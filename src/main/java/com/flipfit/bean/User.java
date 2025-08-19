@@ -1,17 +1,25 @@
 package com.flipfit.bean;
 
 public class User {
+    private String name;
     private String email;
-    private String password;
-    private String roleId;
+    private String phoneNumber;
 
-    public User(String email, String password, String roleId) {
-        this.email = email;
-        this.password = password;
-        this.roleId = roleId;
+    public User() {
     }
-    public User(){
 
+    public User(String name, String email, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -22,19 +30,11 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

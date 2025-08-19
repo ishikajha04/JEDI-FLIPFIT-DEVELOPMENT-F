@@ -1,93 +1,56 @@
 package com.flipfit.bean;
 
 public class GymCenter {
-    private String gymId;
-    private String gymName;
-    private String ownerEmail;
-    private String address;
-    private int slotCount;
-    private int seatsPerSlotCount;
-    private boolean isVerified;
+    private int ownerId;
+    private int id;
+    private String name;
+    private String location;
 
     public GymCenter() {
-
     }
 
-    public GymCenter(String gymId, String gymName, String ownerEmail, String address, int slotCount, int seatsPerSlotCount, boolean isVerified) {
-        this.gymId = gymId;
-        this.gymName = gymName;
-        this.ownerEmail = ownerEmail;
-        this.address = address;
-        this.slotCount = slotCount;
-        this.seatsPerSlotCount = seatsPerSlotCount;
-        this.isVerified = isVerified;
+    public GymCenter(int ownerId, int id, String name, String location) {
+        this.ownerId = ownerId;
+        this.id = id;
+        this.name = name;
+        this.location = location;
     }
 
-    public String getGymId() {
-        return gymId;
+    public int getOwnerId() {
+        return ownerId;
     }
 
-    public void setGymId(String gymId) {
-        this.gymId = gymId;
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public String getGymName() {
-        return gymName;
+    public int getId() {
+        return id;
     }
 
-    public void setGymName(String gymName) {
-        this.gymName = gymName;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getOwnerEmail() {
-        return ownerEmail;
+    public String getName() {
+        return name;
     }
 
-    public void setOwnerEmail(String ownerEmail) {
-        this.ownerEmail = ownerEmail;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLocation() {
+        return location;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public int getSlotCount() {
-        return slotCount;
+    public void slotDisabled() {
     }
 
-    public void setSlotCount(int slotCount) {
-        this.slotCount = slotCount;
-    }
-
-    public int getSeatsPerSlotCount() {
-        return seatsPerSlotCount;
-    }
-
-    public void setSeatsPerSlotCount(int seatsPerSlotCount) {
-        this.seatsPerSlotCount = seatsPerSlotCount;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean isVerified) {
-        this.isVerified = isVerified;
-    }
-
-
-    public String toString() {
-        String s = "Gym Id : " + this.gymId +
-                "\nGym Name : " + this.gymName +
-                "\nGym Owner Email : " + this.getOwnerEmail() +
-                "\nGym Address : " + this.getAddress() +
-                "\nGym Slotcount : " + this.getSlotCount() +
-                "\nSeat per slot count : " + this.getSeatsPerSlotCount() +
-                "\nVerification : " + (this.isVerified() ? "Yes" : "No");
-        return s;
+    public void addSlot() {
     }
 }

@@ -1,38 +1,32 @@
 package com.flipfit.bean;
 
 public class Notification {
-
-    private String notificationId;
-    private String userId;
+    private int notificationId;
+    private int userId;
     private String message;
-    private boolean isRead;
-    private String date;
 
     public Notification() {
-        super();
     }
 
-    public Notification(String notificationId, String userId, String message) {
+    public Notification(int notificationId, int userId, String message) {
         this.notificationId = notificationId;
         this.userId = userId;
         this.message = message;
     }
 
-    // Getters and setters for all private fields
-
-    public String getNotificationId() {
+    public int getNotificationId() {
         return notificationId;
     }
 
-    public void setNotificationId(String notificationId) {
+    public void setNotificationId(int notificationId) {
         this.notificationId = notificationId;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -45,5 +39,6 @@ public class Notification {
     }
 
     public void pushNotification() {
+        // Method implementation goes here
     }
 }
