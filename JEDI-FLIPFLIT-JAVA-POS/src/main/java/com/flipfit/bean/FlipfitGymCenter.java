@@ -1,19 +1,34 @@
 package com.flipfit.bean;
 
 public class FlipfitGymCenter {
+    private int centerId;
     private int ownerId;
-    private int id;
     private String name;
     private String location;
+    private String address;
+    private boolean isApproved;
+    private int capacity;
 
     public FlipfitGymCenter() {
     }
 
-    public FlipfitGymCenter(int ownerId, int id, String name, String location) {
+    public FlipfitGymCenter(int centerId, int ownerId, String name, String location, String address, int capacity) {
+        this.centerId = centerId;
         this.ownerId = ownerId;
-        this.id = id;
         this.name = name;
         this.location = location;
+        this.address = address;
+        this.capacity = capacity;
+        this.isApproved = false; // Default to not approved
+    }
+
+    // Getters and Setters
+    public int getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(int centerId) {
+        this.centerId = centerId;
     }
 
     public int getOwnerId() {
@@ -22,14 +37,6 @@ public class FlipfitGymCenter {
 
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -48,9 +55,39 @@ public class FlipfitGymCenter {
         this.location = location;
     }
 
-    public void slotDisabled() {
+    public String getAddress() {
+        return address;
     }
 
-    public void addSlot() {
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    @Override
+    public String toString() {
+        return "FlipfitGymCenter{" +
+                "centerId=" + centerId +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", address='" + address + '\'' +
+                ", isApproved=" + isApproved +
+                ", capacity=" + capacity +
+                '}';
     }
 }

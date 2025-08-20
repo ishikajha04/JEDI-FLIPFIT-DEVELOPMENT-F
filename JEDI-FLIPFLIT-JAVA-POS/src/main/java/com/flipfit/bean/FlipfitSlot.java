@@ -1,57 +1,39 @@
 package com.flipfit.bean;
 
-import java.util.Date;
+import java.time.LocalTime;
 
 public class FlipfitSlot {
     private int slotId;
-    private int startTime;
-    private int seatCapacity;
-    private Date date;
     private int centerId;
-    private boolean isDisabled;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private int capacity;
+    private int availableSeats;
+    private String day;
+    private double price;
 
     public FlipfitSlot() {
     }
 
-    public FlipfitSlot(int slotId, int startTime, int seatCapacity, Date date, int centerId, boolean isDisabled) {
+    public FlipfitSlot(int slotId, int centerId, LocalTime startTime, LocalTime endTime,
+                      int capacity, String day, double price) {
         this.slotId = slotId;
-        this.startTime = startTime;
-        this.seatCapacity = seatCapacity;
-        this.date = date;
         this.centerId = centerId;
-        this.isDisabled = isDisabled;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.capacity = capacity;
+        this.availableSeats = capacity; // Initially all seats are available
+        this.day = day;
+        this.price = price;
     }
 
+    // Getters and Setters
     public int getSlotId() {
         return slotId;
     }
 
     public void setSlotId(int slotId) {
         this.slotId = slotId;
-    }
-
-    public int getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
-
-    public int getSeatCapacity() {
-        return seatCapacity;
-    }
-
-    public void setSeatCapacity(int seatCapacity) {
-        this.seatCapacity = seatCapacity;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public int getCenterId() {
@@ -62,19 +44,69 @@ public class FlipfitSlot {
         this.centerId = centerId;
     }
 
-    public boolean isDisabled() {
-        return isDisabled;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setDisabled(boolean disabled) {
-        isDisabled = disabled;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public boolean isSlotAvailable() {
-        return false;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public boolean bookSlot() {
-        return false;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(int availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public boolean isAvailable() {
+        return availableSeats > 0;
+    }
+
+    @Override
+    public String toString() {
+        return "FlipfitSlot{" +
+                "slotId=" + slotId +
+                ", centerId=" + centerId +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", capacity=" + capacity +
+                ", availableSeats=" + availableSeats +
+                ", day='" + day + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

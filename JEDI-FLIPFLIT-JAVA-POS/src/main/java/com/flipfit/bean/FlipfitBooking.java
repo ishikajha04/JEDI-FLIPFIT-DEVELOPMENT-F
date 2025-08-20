@@ -1,43 +1,52 @@
 package com.flipfit.bean;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class FlipfitBooking {
-    public enum BookingStatusEnum {
-        CONFIRMED,
-        WAITLISTED,
-        CANCELLED
-    }
-
     private int bookingId;
-    private int userId;
+    private int customerId;
     private int slotId;
     private int centerId;
-    private BookingStatusEnum bookingStatus;
+    private LocalDate bookingDate;
+    private LocalDateTime bookingTime;
+    private BookingStatus status;
+    private double amount;
 
-    private String type;
-    private Date date;
-    private String customerEmail;
+    public enum BookingStatus {
+        CONFIRMED, CANCELLED, PENDING, COMPLETED
+    }
 
     public FlipfitBooking() {
-        super();
     }
 
-    public FlipfitBooking(int bookingId, int userId, int slotId, int centerId, BookingStatusEnum bookingStatus, String type,Date date,String customerEmail)
-    {
-        this.bookingId=bookingId;
-        this.slotId=slotId;
-        this.centerId=centerId;
-        this.type=type;
-        this.date=date;
-        this.customerEmail=customerEmail;
+    public FlipfitBooking(int bookingId, int customerId, int slotId, int centerId,
+                         LocalDate bookingDate, double amount) {
+        this.bookingId = bookingId;
+        this.customerId = customerId;
+        this.slotId = slotId;
+        this.centerId = centerId;
+        this.bookingDate = bookingDate;
+        this.bookingTime = LocalDateTime.now();
+        this.status = BookingStatus.CONFIRMED;
+        this.amount = amount;
     }
 
+    // Getters and Setters
     public int getBookingId() {
         return bookingId;
     }
 
     public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public int getSlotId() {
@@ -56,28 +65,49 @@ public class FlipfitBooking {
         this.centerId = centerId;
     }
 
-    public String getType() {
-        return type;
+    public LocalDate getBookingDate() {
+        return bookingDate;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setBookingDate(LocalDate bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDateTime getBookingTime() {
+        return bookingTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setBookingTime(LocalDateTime bookingTime) {
+        this.bookingTime = bookingTime;
     }
 
-    public String getCustomerEmail() {
-        return customerEmail;
+    public BookingStatus getStatus() {
+        return status;
     }
 
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
+    public void setStatus(BookingStatus status) {
+        this.status = status;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "FlipfitBooking{" +
+                "bookingId=" + bookingId +
+                ", customerId=" + customerId +
+                ", slotId=" + slotId +
+                ", centerId=" + centerId +
+                ", bookingDate=" + bookingDate +
+                ", bookingTime=" + bookingTime +
+                ", status=" + status +
+                ", amount=" + amount +
+                '}';
+    }
 }

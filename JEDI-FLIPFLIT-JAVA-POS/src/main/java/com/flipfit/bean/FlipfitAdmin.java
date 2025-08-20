@@ -1,19 +1,17 @@
 package com.flipfit.bean;
 
-public class FlipfitAdmin extends FlipfitUser{
-    private String name;
-    private String phoneNumber;
-    private int adminId;
+import java.util.List;
 
-    public FlipfitAdmin(String email, String password, String roleName, String name, String phoneNumber, int adminId) {
-        super(email, password, roleName);
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.adminId = adminId;
-    }
+public class FlipfitAdmin extends FlipfitUser {
+    private int adminId;
 
     public FlipfitAdmin() {
         super();
+    }
+
+    public FlipfitAdmin(String name, String email, String phoneNumber, String password, int adminId) {
+        super(name, email, phoneNumber, password);
+        this.adminId = adminId;
     }
 
     public int getAdminId() {
@@ -23,28 +21,32 @@ public class FlipfitAdmin extends FlipfitUser{
     public void setAdminId(int adminId) {
         this.adminId = adminId;
     }
-    public String getName() {
-        return name;
+
+    public void approveGymOwner(int ownerId) {
+        // Business logic will be implemented in service layer
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void approveGymCenter(int centerId) {
+        // Business logic will be implemented in service layer
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public List<FlipfitGymOwner> viewPendingOwnerRequests() {
+        // Business logic will be implemented in service layer
+        return null;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public List<FlipfitGymCenter> viewPendingCenterRequests() {
+        // Business logic will be implemented in service layer
+        return null;
     }
 
-    public void approveCenter(FlipfitGymCenter center) {
+    public List<FlipfitGymCenter> viewAllCenters() {
+        // Business logic will be implemented in service layer
+        return null;
     }
 
-    public void defineSlot(FlipfitGymCenter center, FlipfitSlot slot) {
-    }
-
-    public void updateOwnerRequest() {
+    public List<FlipfitCustomer> viewAllCustomers() {
+        // Business logic will be implemented in service layer
+        return null;
     }
 }

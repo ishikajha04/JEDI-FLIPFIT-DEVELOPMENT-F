@@ -1,9 +1,11 @@
 package com.flipfit.bean;
 
 public class FlipfitUser {
+    private int userId;
     private String name;
     private String email;
     private String phoneNumber;
+    private String password;
 
     public FlipfitUser() {
     }
@@ -12,6 +14,21 @@ public class FlipfitUser {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+    }
+
+    public FlipfitUser(String name, String email, String phoneNumber, String password) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -36,5 +53,13 @@ public class FlipfitUser {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

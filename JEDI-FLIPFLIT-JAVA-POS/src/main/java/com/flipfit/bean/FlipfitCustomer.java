@@ -1,6 +1,6 @@
 package com.flipfit.bean;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class FlipfitCustomer extends FlipfitUser {
@@ -10,8 +10,8 @@ public class FlipfitCustomer extends FlipfitUser {
         super();
     }
 
-    public FlipfitCustomer(String name, String email, String phoneNumber, int customerId) {
-        super(name, email, phoneNumber);
+    public FlipfitCustomer(String name, String email, String phoneNumber, String password, int customerId) {
+        super(name, email, phoneNumber, password);
         this.customerId = customerId;
     }
 
@@ -23,25 +23,13 @@ public class FlipfitCustomer extends FlipfitUser {
         this.customerId = customerId;
     }
 
-    public void register() {
-    }
-
-    public List<FlipfitGymCenter> viewCenters() {
-        return null;
-    }
-
-    public List<FlipfitSlot> viewAvailability(String day, int centerId) {
-        return null;
-    }
-
-    public FlipfitBooking bookSlot() {
-        return null;
-    }
-
-    public void cancelBooking() {
-    }
-
-    public List<FlipfitBooking> viewPlan(Date date) {
-        return null;
+    @Override
+    public String toString() {
+        return "FlipfitCustomer{" +
+                "customerId=" + customerId +
+                ", name='" + getName() + '\'' +
+                ", email='" + getEmail() + '\'' +
+                ", phoneNumber='" + getPhoneNumber() + '\'' +
+                '}';
     }
 }

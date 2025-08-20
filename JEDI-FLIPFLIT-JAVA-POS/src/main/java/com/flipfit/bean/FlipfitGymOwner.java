@@ -4,15 +4,14 @@ public class FlipfitGymOwner extends FlipfitUser {
     private int ownerId;
     private boolean isApproved;
 
-
     public FlipfitGymOwner() {
         super();
     }
 
-    public FlipfitGymOwner(String name, String email, String phoneNumber, int ownerId, boolean isApproved) {
-        super(name, email, phoneNumber);
+    public FlipfitGymOwner(String name, String email, String phoneNumber, String password, int ownerId) {
+        super(name, email, phoneNumber, password);
         this.ownerId = ownerId;
-        this.isApproved = isApproved;
+        this.isApproved = false; // Default to not approved
     }
 
     public int getOwnerId() {
@@ -31,12 +30,14 @@ public class FlipfitGymOwner extends FlipfitUser {
         isApproved = approved;
     }
 
-    public void registerCenter() {
-    }
-
-    public void removeCenter() {
-    }
-
-    public void createBooking() {
+    @Override
+    public String toString() {
+        return "FlipfitGymOwner{" +
+                "ownerId=" + ownerId +
+                ", isApproved=" + isApproved +
+                ", name='" + getName() + '\'' +
+                ", email='" + getEmail() + '\'' +
+                ", phoneNumber='" + getPhoneNumber() + '\'' +
+                '}';
     }
 }
