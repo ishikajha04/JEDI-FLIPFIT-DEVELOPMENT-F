@@ -64,6 +64,23 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
         if (slot == null || !slot.isAvailable()) {
             return null;
         }
+        // check if booking date is in the future
+        if (bookingDate.isBefore(LocalDate.now())) {
+            return null;
+        }
+        // check if user already have booking for this slot on the same day if yes return null
+        List<FlipfitBooking> existingBookings = bookingDAO.getBookingsByCustomerId(customerId
+                ).stream()
+                .filter(booking -> booking.getSlotId() == slotId && booking.getBookingDate().equals(bookingDate))
+                .toList();
+
+        if (!existingBookings.isEmpty()) {
+            return null;
+        }
+        // check if slot have same day as booking date
+        if (!slot.getDay().equalsIgnoreCase(bookingDate.getDayOfWeek().name())) {
+            return null;
+        }
 
         FlipfitCustomer customer = customerDAO.getCustomerById(customerId);
         if (customer == null) {
