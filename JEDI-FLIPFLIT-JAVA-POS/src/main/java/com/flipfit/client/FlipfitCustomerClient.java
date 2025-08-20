@@ -1,10 +1,9 @@
 package com.flipfit.client;
 
 import com.flipfit.bean.*;
-import com.flipfit.service.FlipfitCustomerService;
-import com.flipfit.service.impl.FlipfitCustomerServiceImpl;
+import com.flipfit.business.FlipfitCustomerService;
+import com.flipfit.business.impl.FlipfitCustomerServiceImpl;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;

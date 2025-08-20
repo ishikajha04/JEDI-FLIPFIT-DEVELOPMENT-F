@@ -1,9 +1,9 @@
-package com.flipfit.service.impl;
+package com.flipfit.business.impl;
 
 import com.flipfit.bean.*;
 import com.flipfit.dao.*;
 import com.flipfit.dao.impl.*;
-import com.flipfit.service.FlipfitGymOwnerService;
+import com.flipfit.business.FlipfitGymOwnerService;
 import java.util.List;
 
 public class FlipfitGymOwnerServiceImpl implements FlipfitGymOwnerService {

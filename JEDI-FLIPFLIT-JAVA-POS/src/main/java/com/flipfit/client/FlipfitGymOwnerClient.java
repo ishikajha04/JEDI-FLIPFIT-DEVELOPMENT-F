@@ -1,8 +1,8 @@
 package com.flipfit.client;
 
 import com.flipfit.bean.*;
-import com.flipfit.service.FlipfitGymOwnerService;
-import com.flipfit.service.impl.FlipfitGymOwnerServiceImpl;
+import com.flipfit.business.FlipfitGymOwnerService;
+import com.flipfit.business.impl.FlipfitGymOwnerServiceImpl;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;

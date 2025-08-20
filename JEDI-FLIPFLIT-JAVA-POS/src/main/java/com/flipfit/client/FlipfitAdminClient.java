@@ -1,8 +1,8 @@
 package com.flipfit.client;
 
 import com.flipfit.bean.*;
-import com.flipfit.service.FlipfitAdminService;
-import com.flipfit.service.impl.FlipfitAdminServiceImpl;
+import com.flipfit.business.FlipfitAdminService;
+import com.flipfit.business.impl.FlipfitAdminServiceImpl;
 import java.util.List;
 import java.util.Scanner;
 

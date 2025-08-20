@@ -1,4 +1,4 @@
-package com.flipfit.service;
+package com.flipfit.business;
 
 import com.flipfit.bean.FlipfitAdmin;
 import com.flipfit.bean.FlipfitGymOwner;
