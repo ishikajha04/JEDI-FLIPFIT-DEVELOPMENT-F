@@ -1,6 +1,6 @@
 package com.flipfit.business;
 
-public class GymOwnerBusiness {
+public class FlipfitGymOwnerService {
     public void registerCenter(int id, String centerName){
         System.out.println("Registering center with id" + id);
     }

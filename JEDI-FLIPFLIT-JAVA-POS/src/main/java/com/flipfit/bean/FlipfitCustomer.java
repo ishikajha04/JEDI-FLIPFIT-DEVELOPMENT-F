@@ -3,14 +3,14 @@ package com.flipfit.bean;
 import java.util.Date;
 import java.util.List;
 
-public class Customer extends User {
+public class FlipfitCustomer extends FlipfitUser {
     private int customerId;
 
-    public Customer() {
+    public FlipfitCustomer() {
         super();
     }
 
-    public Customer(String name, String email, String phoneNumber, int customerId) {
+    public FlipfitCustomer(String name, String email, String phoneNumber, int customerId) {
         super(name, email, phoneNumber);
         this.customerId = customerId;
     }
@@ -26,22 +26,22 @@ public class Customer extends User {
     public void register() {
     }
 
-    public List<GymCenter> viewCenters() {
+    public List<FlipfitGymCenter> viewCenters() {
         return null;
     }
 
-    public List<Slot> viewAvailability(String day, int centerId) {
+    public List<FlipfitSlot> viewAvailability(String day, int centerId) {
         return null;
     }
 
-    public Booking bookSlot() {
+    public FlipfitBooking bookSlot() {
         return null;
     }
 
     public void cancelBooking() {
     }
 
-    public List<Booking> viewPlan(Date date) {
+    public List<FlipfitBooking> viewPlan(Date date) {
         return null;
     }
 }

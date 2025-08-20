@@ -1,14 +1,14 @@
 package com.flipfit.bean;
 
-public class User {
+public class FlipfitUser {
     private String name;
     private String email;
     private String phoneNumber;
 
-    public User() {
+    public FlipfitUser() {
     }
 
-    public User(String name, String email, String phoneNumber) {
+    public FlipfitUser(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

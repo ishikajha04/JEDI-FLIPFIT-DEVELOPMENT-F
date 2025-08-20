@@ -1,6 +1,6 @@
 package com.flipfit.bean;
 
-public class Role {
+public class FlipfitRole {
     public int RoleId;
     public String RoleName;
 

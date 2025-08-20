@@ -1,14 +1,12 @@
 package com.flipfit.client;
 
-import com.flipfit.business.CustomerBusiness;
-
-public class CustomerClient {
-    public static void main(String[] args){
-        // Create the instance of the customer business
-        CustomerBusiness business = new CustomerBusiness();
-        business.createCustomer();
-        System.out.println("Update Customer"+business.updateCustomer(101));
-        System.out.println("Delete Customer"+business.deleteCustomer(102));
-
+public class FlipfitCustomerClient {
+    public void displayGymCustomerMenu() {
+        System.out.println("WELCOME GYM CUSTOMER");
+        System.out.println("Here are your options:");
+        System.out.println("\t- View available gyms");
+        System.out.println("\t- View slot available gyms");
+        System.out.println("\t- View your bookings");
+        System.out.println("\t- Logout");
     }
 }

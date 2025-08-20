@@ -1,6 +1,6 @@
 package com.flipfit.business;
 
-public class PaymentBusiness {
+public class FlipfitPaymentService {
     public void processPayment(int bookingid,double amount){
         System.out.println("Processing payment for id " + bookingid);
     }

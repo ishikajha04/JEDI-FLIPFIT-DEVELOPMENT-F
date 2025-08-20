@@ -2,7 +2,7 @@ package com.flipfit.bean;
 
 import java.util.Date;
 
-public class Payment {
+public class FlipfitPayment {
     public int paymentId;
     public int bookingId;
     public float amount;
@@ -10,7 +10,7 @@ public class Payment {
     public String status;
     public String paymentDateTime;
 
-    public Payment(int paymentId, int bookingId, float amount,String paymentMethod, String status, String paymentDateTime){
+    public FlipfitPayment(int paymentId, int bookingId, float amount,String paymentMethod, String status, String paymentDateTime){
         this.paymentId = paymentId;
         this.bookingId = bookingId;
         this.amount = amount;

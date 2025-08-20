@@ -2,7 +2,7 @@ package com.flipfit.bean;
 
 import java.util.Date;
 
-public class Slot {
+public class FlipfitSlot {
     private int slotId;
     private int startTime;
     private int seatCapacity;
@@ -10,10 +10,10 @@ public class Slot {
     private int centerId;
     private boolean isDisabled;
 
-    public Slot() {
+    public FlipfitSlot() {
     }
 
-    public Slot(int slotId, int startTime, int seatCapacity, Date date, int centerId, boolean isDisabled) {
+    public FlipfitSlot(int slotId, int startTime, int seatCapacity, Date date, int centerId, boolean isDisabled) {
         this.slotId = slotId;
         this.startTime = startTime;
         this.seatCapacity = seatCapacity;

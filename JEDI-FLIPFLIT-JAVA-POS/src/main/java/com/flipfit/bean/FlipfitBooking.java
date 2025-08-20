@@ -1,7 +1,7 @@
 package com.flipfit.bean;
 import java.util.Date;
 
-public class Booking {
+public class FlipfitBooking {
     public enum BookingStatusEnum {
         CONFIRMED,
         WAITLISTED,
@@ -18,11 +18,11 @@ public class Booking {
     private Date date;
     private String customerEmail;
 
-    public Booking() {
+    public FlipfitBooking() {
         super();
     }
 
-    public Booking(int bookingId, int userId, int slotId, int centerId, BookingStatusEnum bookingStatus, String type,Date date,String customerEmail)
+    public FlipfitBooking(int bookingId, int userId, int slotId, int centerId, BookingStatusEnum bookingStatus, String type,Date date,String customerEmail)
     {
         this.bookingId=bookingId;
         this.slotId=slotId;

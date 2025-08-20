@@ -1,18 +1,18 @@
 package com.flipfit.bean;
 
-public class Admin extends User{
+public class FlipfitAdmin extends FlipfitUser{
     private String name;
     private String phoneNumber;
     private int adminId;
 
-    public Admin(String email, String password, String roleName, String name, String phoneNumber, int adminId) {
+    public FlipfitAdmin(String email, String password, String roleName, String name, String phoneNumber, int adminId) {
         super(email, password, roleName);
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.adminId = adminId;
     }
 
-    public Admin() {
+    public FlipfitAdmin() {
         super();
     }
 
@@ -39,10 +39,10 @@ public class Admin extends User{
         this.phoneNumber = phoneNumber;
     }
 
-    public void approveCenter(GymCenter center) {
+    public void approveCenter(FlipfitGymCenter center) {
     }
 
-    public void defineSlot(GymCenter center, Slot slot) {
+    public void defineSlot(FlipfitGymCenter center, FlipfitSlot slot) {
     }
 
     public void updateOwnerRequest() {

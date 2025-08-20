@@ -1,6 +1,6 @@
 package com.flipfit.business;
 
-public class CustomerBusiness {
+public class FlipfitCustomerService {
     public void createCustomer(){
         System.out.println("uCreating Customer");
     }

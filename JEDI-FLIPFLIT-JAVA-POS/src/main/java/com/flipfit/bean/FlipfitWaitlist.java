@@ -1,6 +1,6 @@
 package com.flipfit.bean;
 
-public class Waitlist {
+public class FlipfitWaitlist {
     private String waitlistId;
     private String userId;
     private String slotId;

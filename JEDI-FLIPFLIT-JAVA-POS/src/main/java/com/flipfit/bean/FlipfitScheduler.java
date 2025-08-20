@@ -1,15 +1,15 @@
 package com.flipfit.bean;
 
-public class Scheduler {
+public class FlipfitScheduler {
     private int schedulerId;
     private int userId;
     private String message;
-    private Slot slot;
+    private FlipfitSlot slot;
 
-    public Scheduler() {
+    public FlipfitScheduler() {
     }
 
-    public Scheduler(int schedulerId, int userId, String message, Slot slot) {
+    public FlipfitScheduler(int schedulerId, int userId, String message, FlipfitSlot slot) {
         this.schedulerId = schedulerId;
         this.userId = userId;
         this.message = message;
@@ -40,11 +40,11 @@ public class Scheduler {
         this.message = message;
     }
 
-    public Slot getSlot() {
+    public FlipfitSlot getSlot() {
         return slot;
     }
 
-    public void setSlot(Slot slot) {
+    public void setSlot(FlipfitSlot slot) {
         this.slot = slot;
     }
 

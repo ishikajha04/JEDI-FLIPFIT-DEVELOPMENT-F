@@ -1,6 +1,6 @@
 package com.flipfit.business;
 
-public class AdminBusiness {
+public class FlipfitAdminService {
     public void approveCenter(int id){
         System.out.println("Approving center with id" + id);
     }

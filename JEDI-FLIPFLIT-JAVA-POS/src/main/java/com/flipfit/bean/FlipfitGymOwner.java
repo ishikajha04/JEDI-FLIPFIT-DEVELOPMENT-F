@@ -1,15 +1,15 @@
 package com.flipfit.bean;
 
-public class GymOwner extends User {
+public class FlipfitGymOwner extends FlipfitUser {
     private int ownerId;
     private boolean isApproved;
 
 
-    public GymOwner() {
+    public FlipfitGymOwner() {
         super();
     }
 
-    public GymOwner(String name, String email, String phoneNumber, int ownerId, boolean isApproved) {
+    public FlipfitGymOwner(String name, String email, String phoneNumber, int ownerId, boolean isApproved) {
         super(name, email, phoneNumber);
         this.ownerId = ownerId;
         this.isApproved = isApproved;

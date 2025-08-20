@@ -1,15 +1,15 @@
 package com.flipfit.bean;
 
-public class GymCenter {
+public class FlipfitGymCenter {
     private int ownerId;
     private int id;
     private String name;
     private String location;
 
-    public GymCenter() {
+    public FlipfitGymCenter() {
     }
 
-    public GymCenter(int ownerId, int id, String name, String location) {
+    public FlipfitGymCenter(int ownerId, int id, String name, String location) {
         this.ownerId = ownerId;
         this.id = id;
         this.name = name;

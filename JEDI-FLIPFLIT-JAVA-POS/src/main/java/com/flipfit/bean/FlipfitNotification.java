@@ -1,14 +1,14 @@
 package com.flipfit.bean;
 
-public class Notification {
+public class FlipfitNotification {
     private int notificationId;
     private int userId;
     private String message;
 
-    public Notification() {
+    public FlipfitNotification() {
     }
 
-    public Notification(int notificationId, int userId, String message) {
+    public FlipfitNotification(int notificationId, int userId, String message) {
         this.notificationId = notificationId;
         this.userId = userId;
         this.message = message;
