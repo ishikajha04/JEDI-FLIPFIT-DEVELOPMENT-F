@@ -1,9 +1,9 @@
 package com.flipfit.client;
+
 import java.util.Scanner;
 
-
 public class FlipfitApplication {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int choice;
 
@@ -61,15 +61,13 @@ public class FlipfitApplication {
         switch (roleChoice) {
             case 1:
                 FlipfitCustomerClient customerClient = new FlipfitCustomerClient();
-                customerClient.displayGymCustomerMenu();
+                customerClient.displayGymCustomerMenu(scanner);
                 break;
             case 2:
                 FlipfitGymOwnerClient gymOwnerClient = new FlipfitGymOwnerClient();
-                gymOwnerClient.displayGymOwnerMenu();
                 break;
             case 3:
                 FlipfitAdminClient adminClient = new FlipfitAdminClient();
-                adminClient.displayGymAdminMenu();
                 break;
             default:
                 System.out.println("Invalid role choice. Please try again.");
