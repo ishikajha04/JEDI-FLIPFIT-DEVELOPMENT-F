@@ -1,16 +1,21 @@
-package com.flipfit.business;
+package com.flipfit.service;
 
-public class FlipfitAdminService {
-    public void approveCenter(int id){
-        System.out.println("Approving center with id" + id);
-    }
-    public void defineSlot(int id){
-        System.out.println("Defining slot with id" + id);
-    }
-    public void removeCenter(int id){
-        System.out.println("Removing center with id" + id);
-    }
-    public void updateOwnerRequest(int id){
-        System.out.println("Updating owner request with id" + id);
-    }
+import com.flipfit.bean.FlipfitAdmin;
+import com.flipfit.bean.FlipfitGymOwner;
+import com.flipfit.bean.FlipfitGymCenter;
+import com.flipfit.bean.FlipfitCustomer;
+import java.util.List;
+
+public interface FlipfitAdminService {
+    FlipfitAdmin authenticateAdmin(String email, String password);
+    List<FlipfitGymOwner> viewPendingGymOwnerRequests();
+    boolean approveGymOwner(int ownerId);
+    boolean rejectGymOwner(int ownerId);
+    List<FlipfitGymCenter> viewPendingGymCenterRequests();
+    boolean approveGymCenter(int centerId);
+    boolean rejectGymCenter(int centerId);
+    List<FlipfitGymCenter> viewAllGymCenters();
+    List<FlipfitGymOwner> viewAllGymOwners();
+    List<FlipfitCustomer> viewAllCustomers();
+    FlipfitAdmin getAdminProfile(int adminId);
 }
