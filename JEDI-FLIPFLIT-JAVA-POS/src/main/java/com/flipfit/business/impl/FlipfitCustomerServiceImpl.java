@@ -19,7 +19,6 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     private FlipfitSlotDAO slotDAO;
     private FlipfitBookingDAO bookingDAO;
     private FlipfitWaitlistDAO waitlistDAO;
-    private static final double SLOT_BOOKING_AMOUNT = 500.0;
 
 
     public FlipfitCustomerServiceImpl() {
@@ -71,17 +70,49 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
 
     @Override
     public FlipfitBooking bookSlot(int customerId, int slotId, LocalDate bookingDate) {
+        // Validate booking date constraints
+        if (!isValidBookingDate(bookingDate)) {
+            return null; // Don't add to waitlist for invalid dates
+        }
+
+        // Get slot information to validate weekday and fetch center ID
+        FlipfitSlot slot = slotDAO.getSlotById(slotId);
+        if (slot == null) {
+            System.out.println("Slot doesn't exist.");
+            return null;
+        }
+
+        // Validate that booking date matches the slot's weekday
+        if (!isCorrectWeekday(bookingDate, slot.getDay())) {
+            System.out.println("Booking date " + bookingDate + " doesn't match slot day " + slot.getDay() + ". Please choose a correct date.");
+            return null; // Don't add to waitlist for wrong weekday
+        }
+
+        // Check for overlapping bookings on the same date
+        List<FlipfitBooking> existingBookings = getCustomerBookingsForDate(customerId, bookingDate);
+        if (!existingBookings.isEmpty()) {
+            if (!handleOverlappingBookings(existingBookings, slot)) {
+                return null; // User explicitly cancelled, don't add to waitlist
+            }
+        }
+
+        // Check if slot is full, if so add to waitlist
+        if (slot.getAvailableSeats() <= 0) {
+            System.out.println("Slot is full. You have been added to the waitlist.");
+            return addToWaitlist(customerId, slotId, bookingDate);
+        }
+
+        if (!slot.isAvailable()) {
+            System.out.println("Slot not available.");
+            return null;
+        }
+
         List<FlipfitCard> cards = cardDAO.getCustomerCards(customerId);
         if (cards.isEmpty()) {
             System.out.println("No payment methods found. Please add a card first.");
             return null;
         }
 
-        // Get slot information to fetch center ID
-        FlipfitSlot slot = slotDAO.getSlotById(slotId);
-        if (slot == null || !slot.isAvailable()) {
-            return null;
-        }
         // Display available cards
         System.out.println("\nSelect a card for payment:");
         for (FlipfitCard card : cards) {
@@ -106,22 +137,23 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             System.out.println("Invalid card selected.");
             return null;
         }
+
         FlipfitCustomer customer = customerDAO.getCustomerById(customerId);
         if (customer == null) {
             return null;
         }
 
-        // Create booking with payment
+        // Create booking with payment using slot's dynamic price
         FlipfitBooking booking = new FlipfitBooking();
         booking.setCustomerId(customerId);
         booking.setSlotId(slotId);
         booking.setCenterId(slot.getCenterId()); // Set the center ID from slot
         booking.setBookingDate(bookingDate);
-        booking.setAmount(SLOT_BOOKING_AMOUNT);
+        booking.setAmount(slot.getPrice()); // Use slot's dynamic price
         booking.setStatus(FlipfitBooking.BookingStatus.CONFIRMED); // Set initial status
         booking.setBookingTime(LocalDateTime.now());
 
-        System.out.println("\nConfirm payment of ₹" + SLOT_BOOKING_AMOUNT);
+        System.out.println("\nConfirm payment of ₹" + slot.getPrice());
         System.out.print("Enter 1 to confirm payment, 0 to cancel: ");
         int confirm = scanner.nextInt();
 
@@ -140,6 +172,105 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             System.out.println("Booking failed. Please try again.");
             return null;
         }
+    }
+
+    private boolean isValidBookingDate(LocalDate bookingDate) {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        LocalDate maxBookingDate = today.plusWeeks(1);
+
+        if (bookingDate.isBefore(tomorrow)) {
+            System.out.println("Cannot book for today or past dates. Please select from tomorrow onwards.");
+            return false;
+        }
+
+        if (bookingDate.isAfter(maxBookingDate)) {
+            System.out.println("Cannot book more than 1 week in advance. Maximum booking date: " + maxBookingDate);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isCorrectWeekday(LocalDate bookingDate, String slotDay) {
+        String bookingDayOfWeek = bookingDate.getDayOfWeek().name();
+
+        // Convert to proper case for comparison
+        String bookingDay = bookingDayOfWeek.charAt(0) + bookingDayOfWeek.substring(1).toLowerCase();
+
+        return bookingDay.equalsIgnoreCase(slotDay);
+    }
+
+    private List<FlipfitBooking> getCustomerBookingsForDate(int customerId, LocalDate date) {
+        List<FlipfitBooking> allBookings = bookingDAO.getBookingsByCustomerId(customerId);
+        return allBookings.stream()
+                .filter(booking -> booking.getBookingDate().equals(date) &&
+                        (booking.getStatus() == FlipfitBooking.BookingStatus.CONFIRMED ||
+                         booking.getStatus() == FlipfitBooking.BookingStatus.PENDING))
+                .collect(Collectors.toList());
+    }
+
+    private boolean handleOverlappingBookings(List<FlipfitBooking> existingBookings, FlipfitSlot newSlot) {
+        System.out.println("\nWarning: You already have bookings on this date:");
+
+        for (FlipfitBooking booking : existingBookings) {
+            FlipfitSlot existingSlot = slotDAO.getSlotById(booking.getSlotId());
+            if (existingSlot != null) {
+                System.out.println("Booking ID: " + booking.getBookingId() +
+                                 " | Time: " + existingSlot.getStartTime() + " - " + existingSlot.getEndTime() +
+                                 " | Status: " + booking.getStatus());
+
+                // Check for time overlap
+                if (slotsOverlap(existingSlot, newSlot)) {
+                    System.out.println("Time slots overlap detected!");
+                    System.out.println("Existing slot: " + existingSlot.getStartTime() + " - " + existingSlot.getEndTime());
+                    System.out.println("New slot: " + newSlot.getStartTime() + " - " + newSlot.getEndTime());
+
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.println("\nChoose an option:");
+                    System.out.println("1. Cancel existing overlapping bookings and proceed with new booking");
+                    System.out.println("2. Keep both bookings (allow overlapping)");
+                    System.out.println("3. Cancel new booking");
+                    System.out.print("Enter your choice (1-3): ");
+
+                    int choice = scanner.nextInt();
+                    switch (choice) {
+                        case 1:
+                            // Cancel overlapping bookings
+                            for (FlipfitBooking overlappingBooking : existingBookings) {
+                                FlipfitSlot overlappingSlot = slotDAO.getSlotById(overlappingBooking.getSlotId());
+                                if (overlappingSlot != null && slotsOverlap(overlappingSlot, newSlot)) {
+                                    cancelBooking(overlappingBooking.getBookingId(), overlappingBooking.getCustomerId());
+                                    System.out.println("Cancelled overlapping booking ID: " + overlappingBooking.getBookingId());
+                                }
+                            }
+                            return true;
+                        case 2:
+                            System.out.println("Proceeding with overlapping bookings...");
+                            return true;
+                        case 3:
+                            System.out.println("New booking cancelled.");
+                            return false;
+                        default:
+                            System.out.println("Invalid choice. Cancelling new booking.");
+                            return false;
+                    }
+                }
+            }
+        }
+
+        // No overlaps found, but existing bookings on same date
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nYou have existing bookings on this date but no time conflicts.");
+        System.out.print("Do you want to proceed with the new booking? (1 for Yes, 0 for No): ");
+        int proceed = scanner.nextInt();
+
+        return proceed == 1;
+    }
+
+    private boolean slotsOverlap(FlipfitSlot slot1, FlipfitSlot slot2) {
+        return slot1.getStartTime().isBefore(slot2.getEndTime()) &&
+               slot2.getStartTime().isBefore(slot1.getEndTime());
     }
 
     @Override
@@ -254,7 +385,7 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     public List<FlipfitBooking> viewBookingsByDate(int customerId, LocalDate date) {
         return bookingDAO.getBookingsByCustomerId(customerId).stream()
                 .filter(booking -> booking.getBookingDate().equals(date))
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -287,3 +418,4 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
         return cardDAO.getCustomerCards(customerId);
     }
 }
+

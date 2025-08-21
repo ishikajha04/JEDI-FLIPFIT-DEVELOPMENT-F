@@ -7,18 +7,16 @@ public class FlipfitGymCenter {
     private String location;
     private String address;
     private boolean isApproved;
-    private int capacity;
 
     public FlipfitGymCenter() {
     }
 
-    public FlipfitGymCenter(int centerId, int ownerId, String name, String location, String address, int capacity) {
+    public FlipfitGymCenter(int centerId, int ownerId, String name, String location, String address) {
         this.centerId = centerId;
         this.ownerId = ownerId;
         this.name = name;
         this.location = location;
         this.address = address;
-        this.capacity = capacity;
         this.isApproved = false; // Default to not approved
     }
 
@@ -71,14 +69,6 @@ public class FlipfitGymCenter {
         isApproved = approved;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     @Override
     public String toString() {
         return "FlipfitGymCenter{" +
@@ -87,7 +77,6 @@ public class FlipfitGymCenter {
                 ", location='" + location + '\'' +
                 ", address='" + address + '\'' +
                 ", isApproved=" + isApproved +
-                ", capacity=" + capacity +
                 '}';
     }
 }
