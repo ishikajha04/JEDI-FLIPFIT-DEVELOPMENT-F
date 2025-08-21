@@ -4,6 +4,8 @@ import com.flipfit.bean.FlipfitCustomer;
 import com.flipfit.bean.FlipfitGymCenter;
 import com.flipfit.bean.FlipfitSlot;
 import com.flipfit.bean.FlipfitBooking;
+import com.flipfit.bean.FlipfitCard;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,4 +21,11 @@ public interface FlipfitCustomerService {
     List<FlipfitBooking> viewBookingsByDate(int customerId, LocalDate date);
     FlipfitCustomer getCustomerProfile(int customerId);
     boolean updateCustomerProfile(FlipfitCustomer customer);
+    FlipfitBooking addToWaitlist(int customerId, int slotId, LocalDate bookingDate);
+
+    // Card Management methods
+    boolean addCard(FlipfitCard card);
+    boolean removeCard(int cardId, int customerId);
+    boolean updateCard(FlipfitCard card);
+    List<FlipfitCard> getCustomerCards(int customerId);
 }
