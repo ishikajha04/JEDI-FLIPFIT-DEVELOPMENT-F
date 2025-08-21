@@ -81,6 +81,9 @@ public class FlipfitCustomerClient {
                         updateProfile();
                         break;
                     case 9:
+                        managePaymentMethods();
+                        break;
+                    case 10:
                         loggedInCustomer = null;
                         System.out.println("Logged out successfully!");
                         break;
@@ -189,26 +192,75 @@ public class FlipfitCustomerClient {
     }
 
     private void bookSlot() {
+        // First check if customer has any saved cards
+        List<FlipfitCard> cards = customerService.getCustomerCards(loggedInCustomer.getCustomerId());
+        if (cards.isEmpty()) {
+            System.out.println("\nNo payment methods found. You need to add a card before booking.");
+            System.out.print("Would you like to add a card now? (1 for Yes, 0 for No): ");
+            int addCard = getIntInput();
+            if (addCard == 1) {
+                managePaymentMethods();
+            } else {
+                return;
+            }
+        }
+
         System.out.print("Enter Slot ID to book: ");
         int slotId = getIntInput();
+//    private void bookSlot() {
+//        System.out.print("Enter Slot ID to book: ");
+//        int slotId = getIntInput();
+////        scanner.nextLine();
+//
+//        System.out.print("Enter booking date (YYYY-MM-DD): ");
+//        String dateStr = scanner.nextLine();
+//
+//        try {
+//            LocalDate bookingDate = LocalDate.parse(dateStr);
+//            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+//
+//            if (booking != null) {
+//                System.out.println("Booking successful! Booking ID: " + booking.getBookingId());
+//                System.out.println("Amount paid: ₹" + booking.getAmount());
+//            } else {
+////                System.out.println("Booking failed. Slot might not be available.");
+//                int waitlistPosition = customerService.addToWaitlist(loggedInCustomer.getCustomerId(), slotId);
+//                if (waitlistPosition > 0) {
+//                    System.out.println("Slot is full. You have been added to the waitlist. Your position is: " + waitlistPosition);
+//                } else {
+//                    System.out.println("Booking failed. Slot might not exist or be available.");
+//                }
+//            }
+//        } catch (DateTimeParseException e) {
+//            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+//        }
+//    }
 
-        System.out.print("Enter booking date (YYYY-MM-DD): ");
-        String dateStr = scanner.nextLine();
+            System.out.print("Enter booking date (YYYY-MM-DD): ");
+            String dateStr = scanner.nextLine();
 
-        try {
-            LocalDate bookingDate = LocalDate.parse(dateStr);
-            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+            try {
+                LocalDate bookingDate = LocalDate.parse(dateStr);
+                FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
 
-            if (booking != null) {
-                System.out.println("Booking successful! Booking ID: " + booking.getBookingId());
-                System.out.println("Amount paid: ₹" + booking.getAmount());
-            } else {
-                System.out.println("Booking failed. Slot might not be available.");
+                if (booking != null) {
+                    System.out.println("\nBooking successful!");
+                    System.out.println("Booking ID: " + booking.getBookingId());
+                    System.out.println("Amount paid: ₹" + booking.getAmount());
+                    System.out.println("You will be redirected to the main menu...");
+                } else {
+                    // Add customer to waitlist and create a booking object with WAITLISTED status
+                    FlipfitBooking waitlistBooking = customerService.addToWaitlist(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+                    if (waitlistBooking != null) {
+                        System.out.println("Slot is full. You have been added to the waitlist. Your waitlist booking ID is: " + waitlistBooking.getBookingId());
+                    } else {
+                        System.out.println("Failed to add to waitlist. Slot might not exist.");
+                    }
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
             }
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
         }
-    }
 
     private void viewMyBookings() {
         System.out.println("\n=== MY BOOKINGS ===");
@@ -266,6 +318,158 @@ public class FlipfitCustomerClient {
         } else {
             System.out.println("Failed to update profile.");
         }
+    }
+
+    private void managePaymentMethods() {
+        while (true) {
+            System.out.println("\n=== PAYMENT METHODS MANAGEMENT ===");
+            System.out.println("1. Add New Card");
+            System.out.println("2. Remove Card");
+            System.out.println("3. Modify Card");
+            System.out.println("4. View Saved Cards");
+            System.out.println("5. Back to Main Menu");
+            System.out.print("Choose an option: ");
+
+            int choice = getIntInput();
+            switch (choice) {
+                case 1:
+                    addNewCard();
+                    break;
+                case 2:
+                    removeCard();
+                    break;
+                case 3:
+                    modifyCard();
+                    break;
+                case 4:
+                    viewSavedCards();
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    private void addNewCard() {
+        System.out.println("\n=== ADD NEW CARD ===");
+        FlipfitCard card = new FlipfitCard();
+        card.setCustomerId(loggedInCustomer.getCustomerId());
+
+        System.out.print("Enter Card Number (16 digits): ");
+        String cardNumber = scanner.nextLine();
+        if (!cardNumber.matches("\\d{16}")) {
+            System.out.println("Invalid card number format!");
+            return;
+        }
+        card.setCardNumber(cardNumber);
+
+        System.out.print("Enter Card Holder Name: ");
+        card.setCardHolderName(scanner.nextLine());
+
+        System.out.print("Enter Expiry Date (MM/YY): ");
+        String expiryDate = scanner.nextLine();
+        if (!expiryDate.matches("\\d{2}/\\d{2}")) {
+            System.out.println("Invalid expiry date format!");
+            return;
+        }
+        card.setExpiryDate(expiryDate);
+
+        System.out.print("Enter CVV (3 digits): ");
+        String cvv = scanner.nextLine();
+        if (!cvv.matches("\\d{3}")) {
+            System.out.println("Invalid CVV format!");
+            return;
+        }
+        card.setCvv(cvv);
+
+        if (customerService.addCard(card)) {
+            System.out.println("Card added successfully!");
+        } else {
+            System.out.println("Failed to add card. Please try again.");
+        }
+    }
+
+    private void removeCard() {
+        List<FlipfitCard> cards = viewSavedCards();
+        if (cards.isEmpty()) {
+            return;
+        }
+
+        System.out.print("Enter Card ID to remove: ");
+        int cardId = getIntInput();
+
+        if (customerService.removeCard(cardId, loggedInCustomer.getCustomerId())) {
+            System.out.println("Card removed successfully!");
+        } else {
+            System.out.println("Failed to remove card. Please try again.");
+        }
+    }
+
+    private void modifyCard() {
+        List<FlipfitCard> cards = viewSavedCards();
+        if (cards.isEmpty()) {
+            return;
+        }
+
+        System.out.print("Enter Card ID to modify: ");
+        int cardId = getIntInput();
+
+        FlipfitCard cardToModify = null;
+        for (FlipfitCard card : cards) {
+            if (card.getCardId() == cardId) {
+                cardToModify = card;
+                break;
+            }
+        }
+
+        if (cardToModify == null) {
+            System.out.println("Card not found!");
+            return;
+        }
+
+        System.out.println("\n=== MODIFY CARD ===");
+        System.out.print("Enter new Card Holder Name (press Enter to keep current): ");
+        String name = scanner.nextLine();
+        if (!name.isEmpty()) {
+            cardToModify.setCardHolderName(name);
+        }
+
+        System.out.print("Enter new Expiry Date (MM/YY) (press Enter to keep current): ");
+        String expiry = scanner.nextLine();
+        if (!expiry.isEmpty()) {
+            if (!expiry.matches("\\d{2}/\\d{2}")) {
+                System.out.println("Invalid expiry date format!");
+                return;
+            }
+            cardToModify.setExpiryDate(expiry);
+        }
+
+        if (customerService.updateCard(cardToModify)) {
+            System.out.println("Card updated successfully!");
+        } else {
+            System.out.println("Failed to update card. Please try again.");
+        }
+    }
+
+    private List<FlipfitCard> viewSavedCards() {
+        System.out.println("\n=== SAVED CARDS ===");
+        List<FlipfitCard> cards = customerService.getCustomerCards(loggedInCustomer.getCustomerId());
+
+        if (cards.isEmpty()) {
+            System.out.println("No saved cards found.");
+            return cards;
+        }
+
+        for (FlipfitCard card : cards) {
+            System.out.println("Card ID: " + card.getCardId());
+            System.out.println("Card Number: ****" + card.getCardNumber().substring(12));
+            System.out.println("Card Holder: " + card.getCardHolderName());
+            System.out.println("Expiry: " + card.getExpiryDate());
+            System.out.println("------------------------");
+        }
+        return cards;
     }
 
     private int getIntInput() {
