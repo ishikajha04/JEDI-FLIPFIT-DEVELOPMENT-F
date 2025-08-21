@@ -28,8 +28,6 @@ public class DatabaseConnection {
 
                 // Load the properties file
                 properties.load(input);
-                // show the loaded properties for debugging
-
 
                 // Load JDBC driver
                 try {
@@ -55,10 +53,9 @@ public class DatabaseConnection {
             loadProperties();
         }
 
-        String url = "jdbc:mysql://localhost:3306/flipfit_schema";
-        String user =  "root";
-        String password = "";
-        System.out.println("Connecting to database with URL: " + url + ", User: " + user);
+        String url = properties.getProperty("db.url");
+        String user = properties.getProperty("db.username"); // Corrected from db.user
+        String password = properties.getProperty("db.password");
 
         return DriverManager.getConnection(url, user, password);
     }
