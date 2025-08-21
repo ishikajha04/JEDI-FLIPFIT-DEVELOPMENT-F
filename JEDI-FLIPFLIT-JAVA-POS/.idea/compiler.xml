@@ -9,5 +9,8 @@
         <module name="JEDI-FLIPFLIT-JAVA-POS" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="flipfit-app" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,21 +1,21 @@
 package com.flipfit.bean;
 
-public class FlipfitPayment {
-    private int paymentId;
+public class FlipfitCard {
+    private int cardId;
     private int customerId;
-    private String lastFourDigits;
+    private String cardNumber;
     private String cardHolderName;
     private String expiryDate;
-    private boolean isActive;
+    private String cvv;
 
-    public FlipfitPayment() {}
+    public FlipfitCard() {}
 
-    public int getPaymentId() {
-        return paymentId;
+    public int getCardId() {
+        return cardId;
     }
 
-    public void setPaymentId(int paymentId) {
-        this.paymentId = paymentId;
+    public void setCardId(int cardId) {
+        this.cardId = cardId;
     }
 
     public int getCustomerId() {
@@ -26,12 +26,12 @@ public class FlipfitPayment {
         this.customerId = customerId;
     }
 
-    public String getLastFourDigits() {
-        return lastFourDigits;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setLastFourDigits(String lastFourDigits) {
-        this.lastFourDigits = lastFourDigits;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     public String getCardHolderName() {
@@ -50,11 +50,11 @@ public class FlipfitPayment {
         this.expiryDate = expiryDate;
     }
 
-    public boolean getIsActive() {
-        return isActive;
+    public String getCvv() {
+        return cvv;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
     }
 }
