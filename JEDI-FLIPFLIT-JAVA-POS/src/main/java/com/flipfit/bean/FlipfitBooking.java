@@ -14,7 +14,7 @@ public class FlipfitBooking {
     private double amount;
 
     public enum BookingStatus {
-        CONFIRMED, CANCELLED, PENDING, COMPLETED
+        CONFIRMED, CANCELLED, PENDING, COMPLETED, WAITLISTED
     }
 
     public FlipfitBooking() {
