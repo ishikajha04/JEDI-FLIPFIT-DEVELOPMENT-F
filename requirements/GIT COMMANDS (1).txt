@@ -1,0 +1,33 @@
+﻿TOPIC: Jdbc API
+
+
+1. JDBC4.0 (JAVA database connectivity) api are using for connecting various db’s.
+2. For JDBC api we need respective jar file as a driver related to specific db.
+3. We can talk to db using JDBC api’s with various api’s
+3.1 Statement - Deprecated
+3.2 Prepared Statement - focus
+3.3 Callable Statement - used for stored procedure calls
+4. We can handle all the db exceptions by sql exception class, at DAO layer.
+5. We need to create connection of db using drivermanager.connection class, which return connection obj and used for further process, manipulation of data.
+
+
+Reference : https://downloads.mysql.com/archives/c-j/ version-8.4.0
+
+
+TASK 9: in the existing dao layer, replace all the hardcoded collections
+With db logic using prepared statement and implement various DAO methods or service mention below
+1. FlipFitAdminDAO
+2. FlipFitGymOwnerDAO
+3. FlipFitGymOwnerCustomerDAO
+4. FlipFitUserDAO
+5. FlipFitPaymentDAO
+6. TOPIC imPLEMENATTION OF INTERFACE
+
+
+1. We can use interface in app development for declaration of services
+2. We can create the instance of the interface but we cant instantiate
+3. Interface is a flexible approach, to get implemented in project for separation of concern and layered architecture.
+4. We can create interface using interface keyword, and its replaced the abstract class represenatation in java.
+
+
+TASK 10: create all the interfaces related to business services as well as DAO layer int the Flipfit PROJECT.

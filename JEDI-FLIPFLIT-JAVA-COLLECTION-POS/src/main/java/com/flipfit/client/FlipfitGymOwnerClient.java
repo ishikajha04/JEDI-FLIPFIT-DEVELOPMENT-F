@@ -163,10 +163,7 @@ public class FlipfitGymOwnerClient {
         System.out.print("Enter address: ");
         String address = scanner.nextLine();
 
-        System.out.print("Enter capacity: ");
-        int capacity = getIntInput();
-
-        FlipfitGymCenter center = new FlipfitGymCenter(0, loggedInOwner.getOwnerId(), name, location, address, capacity);
+        FlipfitGymCenter center = new FlipfitGymCenter(0, loggedInOwner.getOwnerId(), name, location, address);
 
         if (gymOwnerService.addGymCenter(center)) {
             System.out.println("Gym center added successfully! It's pending admin approval.");
@@ -187,7 +184,6 @@ public class FlipfitGymOwnerClient {
                                  " | Name: " + center.getName() +
                                  " | Location: " + center.getLocation() +
                                  " | Address: " + center.getAddress() +
-                                 " | Capacity: " + center.getCapacity() +
                                  " | Approved: " + (center.isApproved() ? "Yes" : "Pending"));
             }
         }
@@ -312,13 +308,119 @@ public class FlipfitGymOwnerClient {
         System.out.print("Enter Slot ID to update: ");
         int slotId = getIntInput();
 
-        System.out.print("Enter new price: ");
-        double price = getDoubleInput();
+        // First, get the existing slot to verify ownership and show current values
+        FlipfitSlot existingSlot = null;
+        // We need to find the slot through our centers
+        List<FlipfitGymCenter> ownedCenters = gymOwnerService.viewOwnedGymCenters(loggedInOwner.getOwnerId());
 
-        // For simplicity, we'll just update the price
-        // In a real implementation, you'd fetch the slot first and update all fields
-        System.out.println("Update slot functionality would be implemented here.");
-        System.out.println("For this demo, slot update is simplified.");
+        boolean slotFound = false;
+        for (FlipfitGymCenter center : ownedCenters) {
+            List<FlipfitSlot> slots = gymOwnerService.viewSlotsForCenter(center.getCenterId(), loggedInOwner.getOwnerId());
+            for (FlipfitSlot slot : slots) {
+                if (slot.getSlotId() == slotId) {
+                    existingSlot = slot;
+                    slotFound = true;
+                    break;
+                }
+            }
+            if (slotFound) break;
+        }
+
+        if (!slotFound || existingSlot == null) {
+            System.out.println("Slot not found or you don't own this slot.");
+            return;
+        }
+
+        // Display current slot information
+        System.out.println("\n=== CURRENT SLOT INFORMATION ===");
+        System.out.println("Slot ID: " + existingSlot.getSlotId());
+        System.out.println("Day: " + existingSlot.getDay());
+        System.out.println("Time: " + existingSlot.getStartTime() + " - " + existingSlot.getEndTime());
+        System.out.println("Capacity: " + existingSlot.getCapacity());
+        System.out.println("Available Seats: " + existingSlot.getAvailableSeats());
+        System.out.println("Price: ₹" + existingSlot.getPrice());
+        System.out.println("Available: " + (existingSlot.isAvailable() ? "Yes" : "No"));
+
+        System.out.println("\n=== UPDATE SLOT ===");
+        System.out.println("Leave blank to keep current value");
+
+        // Update start time
+        System.out.print("Enter new start time (HH:MM) [Current: " + existingSlot.getStartTime() + "]: ");
+        scanner.nextLine(); // consume newline
+        String startTimeStr = scanner.nextLine().trim();
+        if (!startTimeStr.isEmpty()) {
+            try {
+                existingSlot.setStartTime(java.time.LocalTime.parse(startTimeStr));
+            } catch (Exception e) {
+                System.out.println("Invalid time format. Keeping current start time.");
+            }
+        }
+
+        // Update end time
+        System.out.print("Enter new end time (HH:MM) [Current: " + existingSlot.getEndTime() + "]: ");
+        String endTimeStr = scanner.nextLine().trim();
+        if (!endTimeStr.isEmpty()) {
+            try {
+                existingSlot.setEndTime(java.time.LocalTime.parse(endTimeStr));
+            } catch (Exception e) {
+                System.out.println("Invalid time format. Keeping current end time.");
+            }
+        }
+
+        // Update capacity
+        System.out.print("Enter new capacity [Current: " + existingSlot.getCapacity() + "]: ");
+        String capacityStr = scanner.nextLine().trim();
+        if (!capacityStr.isEmpty()) {
+            try {
+                int newCapacity = Integer.parseInt(capacityStr);
+                if (newCapacity > 0) {
+                    int currentBookings = existingSlot.getCapacity() - existingSlot.getAvailableSeats();
+                    existingSlot.setCapacity(newCapacity);
+                    existingSlot.setAvailableSeats(Math.max(0, newCapacity - currentBookings));
+                } else {
+                    System.out.println("Capacity must be positive. Keeping current capacity.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid capacity. Keeping current capacity.");
+            }
+        }
+
+        // Update price
+        System.out.print("Enter new price [Current: ₹" + existingSlot.getPrice() + "]: ");
+        String priceStr = scanner.nextLine().trim();
+        if (!priceStr.isEmpty()) {
+            try {
+                double newPrice = Double.parseDouble(priceStr);
+                if (newPrice >= 0) {
+                    existingSlot.setPrice(newPrice);
+                } else {
+                    System.out.println("Price cannot be negative. Keeping current price.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price. Keeping current price.");
+            }
+        }
+
+        // Update day
+        System.out.print("Enter new day (e.g., Monday, Tuesday) [Current: " + existingSlot.getDay() + "]: ");
+        String dayStr = scanner.nextLine().trim();
+        if (!dayStr.isEmpty()) {
+            existingSlot.setDay(dayStr);
+        }
+
+        // Confirm and save changes
+        System.out.print("\nSave changes? (1 for Yes, 0 for No): ");
+        int confirm = getIntInput();
+
+        if (confirm == 1) {
+            if (gymOwnerService.updateSlot(existingSlot)) {
+                System.out.println("Slot updated successfully!");
+            } else {
+                System.out.println("Failed to update slot. Please try again.");
+            }
+        } else {
+            System.out.println("Update cancelled.");
+        }
     }
 
     private void removeSlot() {
@@ -385,11 +487,17 @@ public class FlipfitGymOwnerClient {
     }
 
     private int getIntInput() {
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
-            return -1;
+        while (true) {
+            try {
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    System.out.print("Please enter a number: ");
+                    continue;
+                }
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
+            }
         }
     }
 

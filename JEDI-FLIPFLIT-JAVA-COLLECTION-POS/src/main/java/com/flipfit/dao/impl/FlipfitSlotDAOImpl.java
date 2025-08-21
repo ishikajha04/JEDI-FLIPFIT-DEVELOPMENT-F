@@ -14,7 +14,7 @@ public class FlipfitSlotDAOImpl implements FlipfitSlotDAO {
 
     static {
         // Initialize with some dummy data for approved centers
-        FlipfitSlot slot1 = new FlipfitSlot(1, 1, LocalTime.of(6, 0), LocalTime.of(7, 0), 2, "Monday", 500.0);
+        FlipfitSlot slot1 = new FlipfitSlot(1, 1, LocalTime.of(6, 0), LocalTime.of(7, 0), 1, "Monday", 500.0);
         FlipfitSlot slot2 = new FlipfitSlot(2, 1, LocalTime.of(7, 0), LocalTime.of(8, 0), 20, "Monday", 500.0);
         FlipfitSlot slot3 = new FlipfitSlot(3, 1, LocalTime.of(18, 0), LocalTime.of(19, 0), 25, "Monday", 600.0);
         FlipfitSlot slot4 = new FlipfitSlot(4, 2, LocalTime.of(6, 0), LocalTime.of(7, 0), 1, "Monday", 450.0);
@@ -80,8 +80,7 @@ public class FlipfitSlotDAOImpl implements FlipfitSlotDAO {
     public List<FlipfitSlot> getAvailableSlotsByCenterAndDay(int centerId, String day) {
         return slotMap.values().stream()
                 .filter(slot -> slot.getCenterId() == centerId &&
-                               slot.getDay().equalsIgnoreCase(day) &&
-                               slot.isAvailable())
+                               slot.getDay().equalsIgnoreCase(day))
                 .collect(Collectors.toList());
     }
 

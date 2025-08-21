@@ -51,7 +51,8 @@ public class FlipfitCustomerClient {
                 System.out.println("6. Cancel Booking");
                 System.out.println("7. View Profile");
                 System.out.println("8. Update Profile");
-                System.out.println("9. Logout");
+                System.out.println("9. Manage Payment Methods");
+                System.out.println("10. Logout");
                 System.out.print("Choose an option: ");
 
                 int choice = getIntInput();
@@ -145,8 +146,7 @@ public class FlipfitCustomerClient {
                 System.out.println("ID: " + center.getCenterId() +
                                  " | Name: " + center.getName() +
                                  " | Location: " + center.getLocation() +
-                                 " | Address: " + center.getAddress() +
-                                 " | Capacity: " + center.getCapacity());
+                                 " | Address: " + center.getAddress());
             }
         }
     }
@@ -249,13 +249,7 @@ public class FlipfitCustomerClient {
                     System.out.println("Amount paid: ₹" + booking.getAmount());
                     System.out.println("You will be redirected to the main menu...");
                 } else {
-                    // Add customer to waitlist and create a booking object with WAITLISTED status
-                    FlipfitBooking waitlistBooking = customerService.addToWaitlist(loggedInCustomer.getCustomerId(), slotId, bookingDate);
-                    if (waitlistBooking != null) {
-                        System.out.println("Slot is full. You have been added to the waitlist. Your waitlist booking ID is: " + waitlistBooking.getBookingId());
-                    } else {
-                        System.out.println("Failed to add to waitlist. Slot might not exist.");
-                    }
+                    System.out.println("Booking was not completed.");
                 }
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid date format. Please use YYYY-MM-DD.");
@@ -473,11 +467,17 @@ public class FlipfitCustomerClient {
     }
 
     private int getIntInput() {
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
-            return -1;
+        while (true) {
+            try {
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    System.out.print("Please enter a number: ");
+                    continue;
+                }
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
+            }
         }
     }
 }

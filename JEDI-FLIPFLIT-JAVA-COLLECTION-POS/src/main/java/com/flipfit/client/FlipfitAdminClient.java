@@ -155,12 +155,11 @@ public class FlipfitAdminClient {
             System.out.println("No pending gym center requests.");
         } else {
             for (FlipfitGymCenter center : pendingCenters) {
-                System.out.println("Center ID: " + center.getCenterId() +
+                System.out.println("ID: " + center.getCenterId() +
                                  " | Name: " + center.getName() +
                                  " | Location: " + center.getLocation() +
                                  " | Address: " + center.getAddress() +
                                  " | Owner ID: " + center.getOwnerId() +
-                                 " | Capacity: " + center.getCapacity() +
                                  " | Status: Pending Approval");
             }
         }
@@ -207,7 +206,6 @@ public class FlipfitAdminClient {
                                  " | Location: " + center.getLocation() +
                                  " | Address: " + center.getAddress() +
                                  " | Owner ID: " + center.getOwnerId() +
-                                 " | Capacity: " + center.getCapacity() +
                                  " | Approved: " + (center.isApproved() ? "Yes" : "No"));
             }
         }
@@ -255,11 +253,17 @@ public class FlipfitAdminClient {
     }
 
     private int getIntInput() {
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
-            return -1;
+        while (true) {
+            try {
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    System.out.print("Please enter a number: ");
+                    continue;
+                }
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
+            }
         }
     }
 }

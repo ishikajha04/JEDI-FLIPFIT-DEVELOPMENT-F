@@ -13,11 +13,11 @@ public class FlipfitGymCenterDAOImpl implements FlipfitGymCenterDAO {
 
     static {
         // Initialize with some dummy data
-        FlipfitGymCenter center1 = new FlipfitGymCenter(1, 1, "PowerFit Gym", "Downtown", "123 Main St", 50);
+        FlipfitGymCenter center1 = new FlipfitGymCenter(1, 1, "PowerFit Gym", "Downtown", "123 Main St");
         center1.setApproved(true);
-        FlipfitGymCenter center2 = new FlipfitGymCenter(2, 1, "FitZone", "Uptown", "456 Oak Ave", 3);
+        FlipfitGymCenter center2 = new FlipfitGymCenter(2, 1, "FitZone", "Uptown", "456 Oak Ave");
         center2.setApproved(true);
-        FlipfitGymCenter center3 = new FlipfitGymCenter(3, 2, "StrengthHub", "Midtown", "789 Pine Rd", 40);
+        FlipfitGymCenter center3 = new FlipfitGymCenter(3, 2, "StrengthHub", "Midtown", "789 Pine Rd");
         center3.setApproved(false); // Pending approval
 
         centerMap.put(1, center1);
