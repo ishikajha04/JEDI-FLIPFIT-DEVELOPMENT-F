@@ -51,8 +51,7 @@ public class FlipfitCustomerClient {
                 System.out.println("6. Cancel Booking");
                 System.out.println("7. View Profile");
                 System.out.println("8. Update Profile");
-                System.out.println("9. Payment Methods");
-                System.out.println("10. Logout");
+                System.out.println("9. Logout");
                 System.out.print("Choose an option: ");
 
                 int choice = getIntInput();
@@ -208,26 +207,60 @@ public class FlipfitCustomerClient {
 
         System.out.print("Enter Slot ID to book: ");
         int slotId = getIntInput();
+//    private void bookSlot() {
+//        System.out.print("Enter Slot ID to book: ");
+//        int slotId = getIntInput();
+////        scanner.nextLine();
+//
+//        System.out.print("Enter booking date (YYYY-MM-DD): ");
+//        String dateStr = scanner.nextLine();
+//
+//        try {
+//            LocalDate bookingDate = LocalDate.parse(dateStr);
+//            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+//
+//            if (booking != null) {
+//                System.out.println("Booking successful! Booking ID: " + booking.getBookingId());
+//                System.out.println("Amount paid: ₹" + booking.getAmount());
+//            } else {
+////                System.out.println("Booking failed. Slot might not be available.");
+//                int waitlistPosition = customerService.addToWaitlist(loggedInCustomer.getCustomerId(), slotId);
+//                if (waitlistPosition > 0) {
+//                    System.out.println("Slot is full. You have been added to the waitlist. Your position is: " + waitlistPosition);
+//                } else {
+//                    System.out.println("Booking failed. Slot might not exist or be available.");
+//                }
+//            }
+//        } catch (DateTimeParseException e) {
+//            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+//        }
+//    }
 
-        System.out.print("Enter booking date (YYYY-MM-DD): ");
-        String dateStr = scanner.nextLine();
+            System.out.print("Enter booking date (YYYY-MM-DD): ");
+            String dateStr = scanner.nextLine();
 
-        try {
-            LocalDate bookingDate = LocalDate.parse(dateStr);
-            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+            try {
+                LocalDate bookingDate = LocalDate.parse(dateStr);
+                FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
 
-            if (booking != null) {
-                System.out.println("\nBooking successful!");
-                System.out.println("Booking ID: " + booking.getBookingId());
-                System.out.println("Amount paid: ₹" + booking.getAmount());
-                System.out.println("You will be redirected to the main menu...");
-            } else {
-                System.out.println("Booking failed. Please ensure you have a valid payment method and try again.");
+                if (booking != null) {
+                    System.out.println("\nBooking successful!");
+                    System.out.println("Booking ID: " + booking.getBookingId());
+                    System.out.println("Amount paid: ₹" + booking.getAmount());
+                    System.out.println("You will be redirected to the main menu...");
+                } else {
+                    // Add customer to waitlist and create a booking object with WAITLISTED status
+                    FlipfitBooking waitlistBooking = customerService.addToWaitlist(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+                    if (waitlistBooking != null) {
+                        System.out.println("Slot is full. You have been added to the waitlist. Your waitlist booking ID is: " + waitlistBooking.getBookingId());
+                    } else {
+                        System.out.println("Failed to add to waitlist. Slot might not exist.");
+                    }
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
             }
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
         }
-    }
 
     private void viewMyBookings() {
         System.out.println("\n=== MY BOOKINGS ===");

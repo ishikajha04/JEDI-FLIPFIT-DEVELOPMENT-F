@@ -21,6 +21,7 @@ public interface FlipfitCustomerService {
     List<FlipfitBooking> viewBookingsByDate(int customerId, LocalDate date);
     FlipfitCustomer getCustomerProfile(int customerId);
     boolean updateCustomerProfile(FlipfitCustomer customer);
+    FlipfitBooking addToWaitlist(int customerId, int slotId, LocalDate bookingDate);
 
     // Card Management methods
     boolean addCard(FlipfitCard card);

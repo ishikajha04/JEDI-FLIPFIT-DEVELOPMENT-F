@@ -1,44 +1,51 @@
 package com.flipfit.bean;
 
-public class FlipfitWaitlist {
-    private String waitlistId;
-    private String userId;
-    private String slotId;
-    private int position;
+import java.util.LinkedList;
+import java.util.Queue;
 
-    public String getWaitlistId() {
+public class FlipfitWaitlist {
+    private int waitlistId;
+    private int slotId;
+    private Queue<Integer> customerIds;
+
+    public FlipfitWaitlist() {
+        this.customerIds = new LinkedList<>();
+    }
+
+    public int getWaitlistId() {
         return waitlistId;
     }
 
-    public void setWaitlistId(String waitlistId) {
+    public void setWaitlistId(int waitlistId) {
         this.waitlistId = waitlistId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getSlotId() {
+    public int getSlotId() {
         return slotId;
     }
 
-    public void setSlotId(String slotId) {
+    public void setSlotId(int slotId) {
         this.slotId = slotId;
     }
 
-    public int getPosition() {
-        return position;
+    public Queue<Integer> getCustomerIds() {
+        return customerIds;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setCustomerIds(Queue<Integer> customerIds) {
+        this.customerIds = customerIds;
     }
 
-    public void notifyPromotion() {}
-    public void addToWaitlist() {}
-    public void removeFromWaitlist() {}
+    public int addToWaitlist(int userId) {
+        this.customerIds.add(userId);
+        return this.customerIds.size();
+    }
+
+    public Integer getNextCustomer() {
+        return this.customerIds.poll();
+    }
+
+    public boolean removeFromWaitlist(int userId) {
+        return this.customerIds.remove(userId);
+    }
 }

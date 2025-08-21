@@ -1,6 +1,8 @@
 package com.flipfit.bean;
 
 import java.time.LocalTime;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class FlipfitSlot {
     private int slotId;
@@ -11,8 +13,10 @@ public class FlipfitSlot {
     private int availableSeats;
     private String day;
     private double price;
+    private Queue<Integer> waitlist;
 
     public FlipfitSlot() {
+        this.waitlist = new LinkedList<>();
     }
 
     public FlipfitSlot(int slotId, int centerId, LocalTime startTime, LocalTime endTime,
@@ -25,6 +29,7 @@ public class FlipfitSlot {
         this.availableSeats = capacity; // Initially all seats are available
         this.day = day;
         this.price = price;
+        this.waitlist = new LinkedList<>();
     }
 
     // Getters and Setters
@@ -96,6 +101,14 @@ public class FlipfitSlot {
         return availableSeats > 0;
     }
 
+    public Queue<Integer> getWaitlist() {
+        return waitlist;
+    }
+
+    public void setWaitlist(Queue<Integer> waitlist) {
+        this.waitlist = waitlist;
+    }
+
     @Override
     public String toString() {
         return "FlipfitSlot{" +
@@ -107,6 +120,7 @@ public class FlipfitSlot {
                 ", availableSeats=" + availableSeats +
                 ", day='" + day + '\'' +
                 ", price=" + price +
+                ", waitlistSize=" + waitlist.size() +
                 '}';
     }
 }
