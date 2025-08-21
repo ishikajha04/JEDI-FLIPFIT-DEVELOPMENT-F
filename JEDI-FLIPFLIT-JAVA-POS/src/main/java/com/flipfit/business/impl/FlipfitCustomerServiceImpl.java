@@ -3,26 +3,29 @@ package com.flipfit.business.impl;
 import com.flipfit.bean.*;
 import com.flipfit.dao.*;
 import com.flipfit.dao.impl.*;
+import com.flipfit.exception.DatabaseException;
 import com.flipfit.business.FlipfitCustomerService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
-
+import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Implementation of FlipfitCustomerService that uses MySQL DAO implementations
+ */
 public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
-    private FlipfitCardDAO cardDAO;
-    private FlipfitCustomerDAO customerDAO;
-    private FlipfitGymCenterDAO gymCenterDAO;
-    private FlipfitSlotDAO slotDAO;
-    private FlipfitBookingDAO bookingDAO;
-    private FlipfitWaitlistDAO waitlistDAO;
-
+    private final FlipfitCardDAO cardDAO;
+    private final FlipfitCustomerDAO customerDAO;
+    private final FlipfitGymCenterDAO gymCenterDAO;
+    private final FlipfitSlotDAO slotDAO;
+    private final FlipfitBookingDAO bookingDAO;
+    private final FlipfitWaitlistDAO waitlistDAO;
 
     public FlipfitCustomerServiceImpl() {
-        this.cardDAO= new FlipfitCardDAOImpl();
+        this.cardDAO = new FlipfitCardDAOImpl();
         this.customerDAO = new FlipfitCustomerDAOImpl();
         this.gymCenterDAO = new FlipfitGymCenterDAOImpl();
         this.slotDAO = new FlipfitSlotDAOImpl();
@@ -32,40 +35,116 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
 
     @Override
     public boolean registerCustomer(FlipfitCustomer customer) {
-        if (customer == null || customer.getEmail() == null || customer.getPassword() == null) {
+        try {
+            if (customer == null || customer.getEmail() == null || customer.getPassword() == null) {
+                System.out.println("Error: Invalid customer data provided");
+                return false;
+            }
+
+            // Check if email already exists
+            if (customerDAO.getCustomerByEmail(customer.getEmail()) != null) {
+                System.out.println("Error: A customer with this email already exists");
+                return false;
+            }
+
+            boolean result = customerDAO.addCustomer(customer);
+            if (result) {
+                System.out.println("Customer registered successfully with ID: " + customer.getCustomerId());
+            } else {
+                System.out.println("Failed to register customer");
+            }
+            return result;
+        } catch (DatabaseException e) {
+            System.err.println("Database error during customer registration: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            System.err.println("Unexpected error during customer registration: " + e.getMessage());
             return false;
         }
-
-        // Check if email already exists
-        if (customerDAO.getCustomerByEmail(customer.getEmail()) != null) {
-            return false;
-        }
-
-        return customerDAO.addCustomer(customer);
     }
 
     @Override
     public FlipfitCustomer authenticateCustomer(String email, String password) {
-        FlipfitCustomer customer = customerDAO.getCustomerByEmail(email);
-        if (customer != null && customer.getPassword().equals(password)) {
-            return customer;
+        try {
+            FlipfitCustomer customer = customerDAO.getCustomerByEmail(email);
+            if (customer != null && customer.getPassword().equals(password)) {
+                return customer;
+            }
+            System.out.println("Invalid email or password");
+            return null;
+        } catch (DatabaseException e) {
+            System.err.println("Database error during authentication: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.err.println("Unexpected error during authentication: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     @Override
     public List<FlipfitGymCenter> viewAvailableGymCenters() {
-        return gymCenterDAO.getApprovedGymCenters();
+        try {
+            List<FlipfitGymCenter> centers = gymCenterDAO.getApprovedGymCenters();
+            if (centers.isEmpty()) {
+                System.out.println("No approved gym centers available at this time");
+            }
+            return centers;
+        } catch (DatabaseException e) {
+            System.err.println("Database error while retrieving gym centers: " + e.getMessage());
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving gym centers: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public List<FlipfitGymCenter> viewGymCentersByLocation(String location) {
-        return gymCenterDAO.getGymCentersByLocation(location);
+        try {
+            if (location == null || location.trim().isEmpty()) {
+                System.out.println("Error: Location cannot be empty");
+                return new ArrayList<>();
+            }
+
+            List<FlipfitGymCenter> centers = gymCenterDAO.getGymCentersByLocation(location);
+            if (centers.isEmpty()) {
+                System.out.println("No gym centers found at location: " + location);
+            }
+            return centers;
+        } catch (DatabaseException e) {
+            System.err.println("Database error while retrieving gym centers by location: " + e.getMessage());
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving gym centers by location: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public List<FlipfitSlot> viewAvailableSlots(int centerId, String day) {
-        return slotDAO.getAvailableSlotsByCenterAndDay(centerId, day);
+        try {
+            if (centerId <= 0) {
+                System.out.println("Error: Invalid center ID");
+                return new ArrayList<>();
+            }
+
+            if (day == null || day.trim().isEmpty()) {
+                System.out.println("Error: Day cannot be empty");
+                return new ArrayList<>();
+            }
+
+            List<FlipfitSlot> slots = slotDAO.getAvailableSlotsByCenterAndDay(centerId, day);
+            if (slots.isEmpty()) {
+                System.out.println("No available slots for center ID " + centerId + " on " + day);
+            }
+            return slots;
+        } catch (DatabaseException e) {
+            System.err.println("Database error while retrieving available slots: " + e.getMessage());
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving available slots: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     @Override

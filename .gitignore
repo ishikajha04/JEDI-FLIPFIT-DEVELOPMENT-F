@@ -36,3 +36,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/JEDI-FLIPFLIT-JAVA-POS/src/main/resources/database.properties
