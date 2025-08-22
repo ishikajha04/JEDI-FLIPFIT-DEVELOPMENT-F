@@ -3,7 +3,7 @@ package com.flipfit.business.impl;
 import com.flipfit.bean.*;
 import com.flipfit.dao.*;
 import com.flipfit.dao.impl.*;
-import com.flipfit.exception.DatabaseException;
+import com.flipfit.exception.*;
 import com.flipfit.business.FlipfitAdminService;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +28,23 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
     public FlipfitAdmin authenticateAdmin(String email, String password) {
         try {
             FlipfitAdmin admin = adminDAO.getAdminByEmail(email);
-            if (admin != null && admin.getPassword().equals(password)) {
-                return admin;
+            if (admin == null) {
+                throw new UserNotFoundException("Admin with email " + email + " not found");
             }
-            System.out.println("Invalid email or password");
+
+            if (!admin.getPassword().equals(password)) {
+                System.out.println("Invalid password");
+                return null;
+            }
+
+            return admin;
+        } catch (UserNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return null;
         } catch (DatabaseException e) {
-            System.err.println("Database error during admin authentication: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return null;
         } catch (Exception e) {
             System.err.println("Unexpected error during admin authentication: " + e.getMessage());
@@ -53,7 +63,8 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
             }
             return pendingOwners;
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving pending gym owner requests: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Unexpected error while retrieving pending gym owner requests: " + e.getMessage());
@@ -66,19 +77,23 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         try {
             FlipfitGymOwner owner = gymOwnerDAO.getGymOwnerById(ownerId);
             if (owner == null) {
-                System.out.println("Error: Gym owner not found");
-                return false;
+                throw new UserNotFoundException(String.valueOf(ownerId), "Gym Owner");
             }
 
             boolean result = gymOwnerDAO.approveGymOwner(ownerId);
             if (result) {
                 System.out.println("Gym owner approved successfully");
             } else {
-                System.out.println("Failed to approve gym owner");
+                throw new RegistrationNotDoneException("Failed to approve gym owner in the database");
             }
             return result;
+        } catch (UserNotFoundException | RegistrationNotDoneException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
         } catch (DatabaseException e) {
-            System.err.println("Database error while approving gym owner: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return false;
         } catch (Exception e) {
             System.err.println("Unexpected error while approving gym owner: " + e.getMessage());
@@ -91,8 +106,7 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         try {
             FlipfitGymOwner owner = gymOwnerDAO.getGymOwnerById(ownerId);
             if (owner == null) {
-                System.out.println("Error: Gym owner not found");
-                return false;
+                throw new UserNotFoundException(String.valueOf(ownerId), "Gym Owner");
             }
 
             // For rejection, we delete the owner record
@@ -100,11 +114,16 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
             if (result) {
                 System.out.println("Gym owner application rejected successfully");
             } else {
-                System.out.println("Failed to reject gym owner application");
+                throw new RegistrationNotDoneException("Failed to reject gym owner application in the database");
             }
             return result;
+        } catch (UserNotFoundException | RegistrationNotDoneException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
         } catch (DatabaseException e) {
-            System.err.println("Database error while rejecting gym owner: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return false;
         } catch (Exception e) {
             System.err.println("Unexpected error while rejecting gym owner: " + e.getMessage());
@@ -123,7 +142,8 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
             }
             return pendingCenters;
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving pending gym center requests: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Unexpected error while retrieving pending gym center requests: " + e.getMessage());
@@ -136,19 +156,33 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         try {
             FlipfitGymCenter center = gymCenterDAO.getGymCenterById(centerId);
             if (center == null) {
-                System.out.println("Error: Gym center not found");
-                return false;
+                throw new SlotNotFoundException("Gym center with ID " + centerId + " not found");
+            }
+
+            // Verify gym owner is approved
+            FlipfitGymOwner owner = gymOwnerDAO.getGymOwnerById(center.getOwnerId());
+            if (owner == null) {
+                throw new UserNotFoundException(String.valueOf(center.getOwnerId()), "Gym Owner");
+            }
+
+            if (!owner.isApproved()) {
+                throw new RegistrationNotDoneException("Cannot approve gym center for unapproved gym owner");
             }
 
             boolean result = gymCenterDAO.approveGymCenter(centerId);
             if (result) {
                 System.out.println("Gym center approved successfully");
             } else {
-                System.out.println("Failed to approve gym center");
+                throw new RegistrationNotDoneException("Failed to approve gym center in the database");
             }
             return result;
+        } catch (SlotNotFoundException | UserNotFoundException | RegistrationNotDoneException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
         } catch (DatabaseException e) {
-            System.err.println("Database error while approving gym center: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return false;
         } catch (Exception e) {
             System.err.println("Unexpected error while approving gym center: " + e.getMessage());
@@ -161,8 +195,7 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         try {
             FlipfitGymCenter center = gymCenterDAO.getGymCenterById(centerId);
             if (center == null) {
-                System.out.println("Error: Gym center not found");
-                return false;
+                throw new SlotNotFoundException("Gym center with ID " + centerId + " not found");
             }
 
             // For rejection, we delete the center record
@@ -170,34 +203,20 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
             if (result) {
                 System.out.println("Gym center application rejected successfully");
             } else {
-                System.out.println("Failed to reject gym center application");
+                throw new RegistrationNotDoneException("Failed to reject gym center application in the database");
             }
             return result;
+        } catch (SlotNotFoundException | RegistrationNotDoneException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
         } catch (DatabaseException e) {
-            System.err.println("Database error while rejecting gym center: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return false;
         } catch (Exception e) {
             System.err.println("Unexpected error while rejecting gym center: " + e.getMessage());
             return false;
-        }
-    }
-
-    @Override
-    public List<FlipfitGymCenter> viewAllGymCenters() {
-        try {
-            List<FlipfitGymCenter> centers = gymCenterDAO.getAllGymCenters();
-            if (centers.isEmpty()) {
-                System.out.println("No gym centers found in the system");
-            } else {
-                System.out.println("Found " + centers.size() + " gym centers");
-            }
-            return centers;
-        } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving all gym centers: " + e.getMessage());
-            return new ArrayList<>();
-        } catch (Exception e) {
-            System.err.println("Unexpected error while retrieving all gym centers: " + e.getMessage());
-            return new ArrayList<>();
         }
     }
 
@@ -207,15 +226,32 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
             List<FlipfitGymOwner> owners = gymOwnerDAO.getAllGymOwners();
             if (owners.isEmpty()) {
                 System.out.println("No gym owners found in the system");
-            } else {
-                System.out.println("Found " + owners.size() + " gym owners");
             }
             return owners;
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving all gym owners: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Unexpected error while retrieving all gym owners: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<FlipfitGymCenter> viewAllGymCenters() {
+        try {
+            List<FlipfitGymCenter> centers = gymCenterDAO.getAllGymCenters();
+            if (centers.isEmpty()) {
+                System.out.println("No gym centers found in the system");
+            }
+            return centers;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving all gym centers: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -226,12 +262,11 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
             List<FlipfitCustomer> customers = customerDAO.getAllCustomers();
             if (customers.isEmpty()) {
                 System.out.println("No customers found in the system");
-            } else {
-                System.out.println("Found " + customers.size() + " customers");
             }
             return customers;
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving all customers: " + e.getMessage());
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return new ArrayList<>();
         } catch (Exception e) {
             System.err.println("Unexpected error while retrieving all customers: " + e.getMessage());
@@ -240,18 +275,178 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
     }
 
     @Override
+    public FlipfitGymOwner viewGymOwnerById(int ownerId) {
+        try {
+            FlipfitGymOwner owner = gymOwnerDAO.getGymOwnerById(ownerId);
+            if (owner == null) {
+                throw new UserNotFoundException(String.valueOf(ownerId), "Gym Owner");
+            }
+            return owner;
+        } catch (UserNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return null;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return null;
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving gym owner: " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public FlipfitGymCenter viewGymCenterById(int centerId) {
+        try {
+            FlipfitGymCenter center = gymCenterDAO.getGymCenterById(centerId);
+            if (center == null) {
+                throw new SlotNotFoundException("Gym center with ID " + centerId + " not found");
+            }
+            return center;
+        } catch (SlotNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return null;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return null;
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving gym center: " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public FlipfitCustomer viewCustomerById(int customerId) {
+        try {
+            FlipfitCustomer customer = customerDAO.getCustomerById(customerId);
+            if (customer == null) {
+                throw new UserNotFoundException(String.valueOf(customerId), "Customer");
+            }
+            return customer;
+        } catch (UserNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return null;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return null;
+        } catch (Exception e) {
+            System.err.println("Unexpected error while retrieving customer: " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public boolean removeGymOwner(int ownerId) {
+        try {
+            FlipfitGymOwner owner = gymOwnerDAO.getGymOwnerById(ownerId);
+            if (owner == null) {
+                throw new UserNotFoundException(String.valueOf(ownerId), "Gym Owner");
+            }
+
+            // First, remove all associated gym centers
+            List<FlipfitGymCenter> centers = gymCenterDAO.getGymCentersByOwnerId(ownerId);
+            for (FlipfitGymCenter center : centers) {
+                gymCenterDAO.deleteGymCenter(center.getCenterId());
+            }
+
+            boolean result = gymOwnerDAO.deleteGymOwner(ownerId);
+            if (result) {
+                System.out.println("Gym owner and associated gym centers removed successfully");
+            } else {
+                throw new DatabaseException("Failed to remove gym owner from the database");
+            }
+            return result;
+        } catch (UserNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
+        } catch (Exception e) {
+            System.err.println("Unexpected error while removing gym owner: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean removeGymCenter(int centerId) {
+        try {
+            FlipfitGymCenter center = gymCenterDAO.getGymCenterById(centerId);
+            if (center == null) {
+                throw new SlotNotFoundException("Gym center with ID " + centerId + " not found");
+            }
+
+            boolean result = gymCenterDAO.deleteGymCenter(centerId);
+            if (result) {
+                System.out.println("Gym center removed successfully");
+            } else {
+                throw new DatabaseException("Failed to remove gym center from the database");
+            }
+            return result;
+        } catch (SlotNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
+        } catch (Exception e) {
+            System.err.println("Unexpected error while removing gym center: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean removeCustomer(int customerId) {
+        try {
+            FlipfitCustomer customer = customerDAO.getCustomerById(customerId);
+            if (customer == null) {
+                throw new UserNotFoundException(String.valueOf(customerId), "Customer");
+            }
+
+            boolean result = customerDAO.deleteCustomer(customerId);
+            if (result) {
+                System.out.println("Customer removed successfully");
+            } else {
+                throw new DatabaseException("Failed to remove customer from the database");
+            }
+            return result;
+        } catch (UserNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
+        } catch (DatabaseException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
+            return false;
+        } catch (Exception e) {
+            System.err.println("Unexpected error while removing customer: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
     public FlipfitAdmin getAdminProfile(int adminId) {
         try {
             FlipfitAdmin admin = adminDAO.getAdminById(adminId);
             if (admin == null) {
-                System.out.println("Admin not found with ID: " + adminId);
+                throw new UserNotFoundException(String.valueOf(adminId), "Admin");
             }
             return admin;
-        } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving admin profile: " + e.getMessage());
+        } catch (UserNotFoundException e) {
+            String errorMessage = ExceptionHandler.handleException(e);
+            System.err.println(errorMessage);
             return null;
         } catch (Exception e) {
-            System.err.println("Unexpected error while retrieving admin profile: " + e.getMessage());
+            System.err.println("Unexpected error retrieving admin profile: " + e.getMessage());
             return null;
         }
     }

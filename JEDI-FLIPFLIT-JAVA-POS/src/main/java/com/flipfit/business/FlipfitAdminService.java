@@ -17,5 +17,18 @@ public interface FlipfitAdminService {
     List<FlipfitGymCenter> viewAllGymCenters();
     List<FlipfitGymOwner> viewAllGymOwners();
     List<FlipfitCustomer> viewAllCustomers();
+
+    FlipfitGymOwner viewGymOwnerById(int ownerId);
+
+    FlipfitGymCenter viewGymCenterById(int centerId);
+
+    FlipfitCustomer viewCustomerById(int customerId);
+
+    boolean removeGymOwner(int ownerId);
+
+    boolean removeGymCenter(int centerId);
+
+    boolean removeCustomer(int customerId);
+
     FlipfitAdmin getAdminProfile(int adminId);
 }
