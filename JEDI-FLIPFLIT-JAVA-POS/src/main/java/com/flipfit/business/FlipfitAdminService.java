@@ -81,6 +81,25 @@ public interface FlipfitAdminService {
      * @exception  if database operation fails
      */
     List<FlipfitCustomer> viewAllCustomers();
+    /**
+     * @method getAdminProfile
+     * @parameter adminId ID of the admin
+     * @return FlipfitAdmin object containing admin profile
+     * @exception if database operation fails
+     */
+
+    FlipfitGymOwner viewGymOwnerById(int ownerId);
+
+    FlipfitGymCenter viewGymCenterById(int centerId);
+
+    FlipfitCustomer viewCustomerById(int customerId);
+
+    boolean removeGymOwner(int ownerId);
+
+    boolean removeGymCenter(int centerId);
+
+    boolean removeCustomer(int customerId);
+
 
     /**
      * @method getAdminProfile

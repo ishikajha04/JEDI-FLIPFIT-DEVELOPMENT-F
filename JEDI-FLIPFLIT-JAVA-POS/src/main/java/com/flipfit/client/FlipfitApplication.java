@@ -2,9 +2,18 @@ package com.flipfit.client;
 
 import java.util.Scanner;
 
+/**
+ * @author Flipfit Team
+ * @description Entry point for the Flipfit Gym System application, providing the main menu and role selection.
+ */
 public class FlipfitApplication {
     private static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * @method main
+     * @parameter args Command-line arguments.
+     * @description Main method to start the Flipfit Gym System application and display the main menu.
+     */
     public static void main(String[] args) {
         System.out.println("=================================================");
         System.out.println("          WELCOME TO FLIPFIT GYM SYSTEM        ");
@@ -38,6 +47,10 @@ public class FlipfitApplication {
         }
     }
 
+    /**
+     * @method displayMainMenu
+     * @description Displays the main menu for role selection in the Flipfit Gym System.
+     */
     private static void displayMainMenu() {
         System.out.println("\n=== FLIPFIT MAIN MENU ===");
         System.out.println("Please select your role:");

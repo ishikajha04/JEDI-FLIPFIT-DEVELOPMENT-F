@@ -6,16 +6,28 @@ import com.flipfit.business.impl.FlipfitAdminServiceImpl;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Flipfit Team
+ * @description Client class for Flipfit Admin operations, providing menu and admin actions.
+ */
 public class FlipfitAdminClient {
     private FlipfitAdminService adminService;
     private Scanner scanner;
     private FlipfitAdmin loggedInAdmin;
 
+    /**
+     * @method FlipfitAdminClient
+     * @description Default constructor initializing admin service and scanner.
+     */
     public FlipfitAdminClient() {
         this.adminService = new FlipfitAdminServiceImpl();
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * @method displayAdminMenu
+     * @description Displays the admin menu and handles user input for admin actions.
+     */
     public void displayAdminMenu() {
         while (true) {
             System.out.println("\n=== FLIPFIT ADMIN PORTAL ===");

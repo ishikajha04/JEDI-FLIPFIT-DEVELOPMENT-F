@@ -8,14 +8,28 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Flipfit Team
+ * @description Client class for Flipfit Customer operations, providing menu and customer actions.
+ */
 public class FlipfitCustomerClient {
     private FlipfitCustomerService customerService;
     private Scanner scanner;
     private FlipfitCustomer loggedInCustomer;
+
+    /**
+     * @method FlipfitCustomerClient
+     * @description Default constructor initializing customer service and scanner.
+     */
     public FlipfitCustomerClient() {
         this.customerService = new FlipfitCustomerServiceImpl();
         this.scanner = new Scanner(System.in);
     }
+
+    /**
+     * @method displayCustomerMenu
+     * @description Displays the customer menu and handles user input for customer actions.
+     */
     public void displayCustomerMenu() {
         while (true) {
             System.out.println("\n=== FLIPFIT CUSTOMER PORTAL ===");
@@ -92,6 +106,7 @@ public class FlipfitCustomerClient {
             }
         }
     }
+
     private void registerCustomer() {
         System.out.println("\n=== CUSTOMER REGISTRATION ===");
         System.out.print("Enter your name: ");
@@ -187,6 +202,7 @@ public class FlipfitCustomerClient {
             }
         }
     }
+
     private void bookSlot() {
         // First check if customer has any saved cards
         List<FlipfitCard> cards = customerService.getCustomerCards(loggedInCustomer.getCustomerId());
@@ -251,6 +267,7 @@ public class FlipfitCustomerClient {
                 System.out.println("Invalid date format. Please use YYYY-MM-DD.");
             }
         }
+
     private void viewMyBookings() {
         System.out.println("\n=== MY BOOKINGS ===");
         List<FlipfitBooking> bookings = customerService.viewBookings(loggedInCustomer.getCustomerId());
@@ -268,6 +285,7 @@ public class FlipfitCustomerClient {
             }
         }
     }
+
     private void cancelBooking() {
         System.out.print("Enter Booking ID to cancel: ");
         int bookingId = getIntInput();
@@ -307,6 +325,7 @@ public class FlipfitCustomerClient {
             System.out.println("Failed to update profile.");
         }
     }
+
     private void managePaymentMethods() {
         while (true) {
             System.out.println("\n=== PAYMENT METHODS MANAGEMENT ===");
@@ -338,6 +357,7 @@ public class FlipfitCustomerClient {
             }
         }
     }
+
     private void addNewCard() {
         System.out.println("\n=== ADD NEW CARD ===");
         FlipfitCard card = new FlipfitCard();
@@ -392,6 +412,7 @@ public class FlipfitCustomerClient {
             System.out.println("Failed to remove card. Please try again.");
         }
     }
+
     private void modifyCard() {
         List<FlipfitCard> cards = viewSavedCards();
         if (cards.isEmpty()) {
