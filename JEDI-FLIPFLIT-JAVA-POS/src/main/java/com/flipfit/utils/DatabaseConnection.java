@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Utility class for database connection management
+ * @author Flipfit Team
+ * @description Utility class for database connection management in the Flipfit system.
  */
 public class DatabaseConnection {
     private static final Properties properties = new Properties();
@@ -18,6 +19,11 @@ public class DatabaseConnection {
         loadProperties();
     }
 
+    /**
+     * @method loadProperties
+     * @description Loads database properties and JDBC driver from the properties file.
+     * @exception IOException, ClassNotFoundException
+     */
     private static void loadProperties() {
         if (!propertiesLoaded) {
             try (InputStream input = DatabaseConnection.class.getClassLoader().getResourceAsStream("database.properties")) {
@@ -44,9 +50,10 @@ public class DatabaseConnection {
     }
 
     /**
-     * Get a connection to the database
+     * @method getConnection
+     * @description Gets a connection to the database using loaded properties.
      * @return Connection object
-     * @throws SQLException if a database access error occurs
+     * @exception SQLException if a database access error occurs
      */
     public static Connection getConnection() throws SQLException {
         if (!propertiesLoaded) {

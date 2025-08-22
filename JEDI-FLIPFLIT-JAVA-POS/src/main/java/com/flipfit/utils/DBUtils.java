@@ -6,13 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Utility class for database operations and resource management
+ * @author Flipfit Team
+ * @description Utility class for database operations and resource management in the Flipfit system.
  */
 public class DBUtils {
-
     /**
-     * Closes the ResultSet silently without throwing exceptions
-     * @param resultSet The ResultSet to close
+     * @method closeResultSet
+     * @parameter resultSet The ResultSet to close.
+     * @description Closes the ResultSet silently without throwing exceptions.
+     * @exception SQLException
      */
     public static void closeResultSet(ResultSet resultSet) {
         try {
@@ -25,8 +27,10 @@ public class DBUtils {
     }
 
     /**
-     * Closes the PreparedStatement silently without throwing exceptions
-     * @param statement The PreparedStatement to close
+     * @method closeStatement
+     * @parameter statement The PreparedStatement to close.
+     * @description Closes the PreparedStatement silently without throwing exceptions.
+     * @exception SQLException
      */
     public static void closeStatement(PreparedStatement statement) {
         try {
@@ -39,8 +43,10 @@ public class DBUtils {
     }
 
     /**
-     * Closes the Connection silently without throwing exceptions
-     * @param connection The Connection to close
+     * @method closeConnection
+     * @parameter connection The Connection to close.
+     * @description Closes the Connection silently without throwing exceptions.
+     * @exception SQLException
      */
     public static void closeConnection(Connection connection) {
         try {

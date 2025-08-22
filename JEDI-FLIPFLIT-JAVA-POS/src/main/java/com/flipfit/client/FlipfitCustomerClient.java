@@ -8,16 +8,28 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Flipfit Team
+ * @description Client class for Flipfit Customer operations, providing menu and customer actions.
+ */
 public class FlipfitCustomerClient {
     private FlipfitCustomerService customerService;
     private Scanner scanner;
     private FlipfitCustomer loggedInCustomer;
 
+    /**
+     * @method FlipfitCustomerClient
+     * @description Default constructor initializing customer service and scanner.
+     */
     public FlipfitCustomerClient() {
         this.customerService = new FlipfitCustomerServiceImpl();
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * @method displayCustomerMenu
+     * @description Displays the customer menu and handles user input for customer actions.
+     */
     public void displayCustomerMenu() {
         while (true) {
             System.out.println("\n=== FLIPFIT CUSTOMER PORTAL ===");

@@ -8,16 +8,28 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Flipfit Team
+ * @description Client class for Flipfit Gym Owner operations, providing menu and owner actions.
+ */
 public class FlipfitGymOwnerClient {
     private FlipfitGymOwnerService gymOwnerService;
     private Scanner scanner;
     private FlipfitGymOwner loggedInOwner;
 
+    /**
+     * @method FlipfitGymOwnerClient
+     * @description Default constructor initializing gym owner service and scanner.
+     */
     public FlipfitGymOwnerClient() {
         this.gymOwnerService = new FlipfitGymOwnerServiceImpl();
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * @method displayGymOwnerMenu
+     * @description Displays the gym owner menu and handles user input for owner actions.
+     */
     public void displayGymOwnerMenu() {
         while (true) {
             System.out.println("\n=== FLIPFIT GYM OWNER PORTAL ===");

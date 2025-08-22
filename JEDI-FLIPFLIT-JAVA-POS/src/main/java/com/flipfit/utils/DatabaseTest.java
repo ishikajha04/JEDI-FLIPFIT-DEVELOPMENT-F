@@ -6,9 +6,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Simple test class to verify database connection
+ * @author Flipfit Team
+ * @description Simple test class to verify database connection and table existence in the Flipfit system.
  */
 public class DatabaseTest {
+    /**
+     * @method main
+     * @parameter args Command-line arguments.
+     * @description Main method to test database connection and list tables.
+     * @exception SQLException if a database access error occurs
+     */
     public static void main(String[] args) {
         System.out.println("Testing database connection...");
         
@@ -25,9 +32,6 @@ public class DatabaseTest {
                     System.out.println("- " + resultSet.getString(1));
                 }
             }
-            
-
-            
         } catch (SQLException e) {
             System.err.println("Database connection failed: " + e.getMessage());
             e.printStackTrace();
