@@ -29,7 +29,20 @@ public class FlipfitCardDAOImpl implements FlipfitCardDAO {
             statement.setInt(1, card.getCustomerId());
             statement.setString(2, card.getCardNumber());
             statement.setString(3, card.getCardHolderName());
-            statement.setString(4, card.getExpiryDate());
+
+            // Convert MM/YY format to a valid MySQL date format (YYYY-MM-DD)
+            String expiryDate = card.getExpiryDate();
+            if (expiryDate != null && expiryDate.matches("\\d{2}/\\d{2}")) {
+                String[] parts = expiryDate.split("/");
+                String month = parts[0];
+                String year = "20" + parts[1]; // Assuming 20xx for the century
+                // Set to last day of the month for maximum validity
+                String formattedDate = String.format("%s-%s-%s", year, month, "01");
+                statement.setString(4, formattedDate);
+            } else {
+                statement.setString(4, expiryDate);
+            }
+
             statement.setString(5, card.getCvv());
             statement.setString(6, "DEBIT"); // Default card type
 
