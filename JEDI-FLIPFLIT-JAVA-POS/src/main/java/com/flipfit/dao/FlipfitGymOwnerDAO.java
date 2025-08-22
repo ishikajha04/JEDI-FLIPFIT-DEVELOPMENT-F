@@ -4,54 +4,69 @@ import com.flipfit.bean.FlipfitGymOwner;
 import java.util.List;
 
 /**
- * @author Flipfit Team
- * @description DAO interface for gym owner-related database operations in the Flipfit system.
+ * DAO interface for gym owner-related database operations in the Flipfit system
+ * @author Ishita, Shubham
+ * @description This interface defines the data access operations for gym owners in the Flipfit application
  */
 public interface FlipfitGymOwnerDAO {
     /**
+     * Retrieves a gym owner by their ID
      * @method getGymOwnerById
-     * @parameter ownerId The ID of the gym owner to retrieve.
-     * @description Retrieves a gym owner by their ID.
-     * @return FlipfitGymOwner object if found, null otherwise.
+     * @param ownerId The ID of the gym owner to retrieve
+     * @return FlipfitGymOwner object if found, null otherwise
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @description Fetches a gym owner's complete profile from the database using their unique ID
      */
     FlipfitGymOwner getGymOwnerById(int ownerId);
 
     /**
+     * Retrieves a gym owner by their email address
      * @method getGymOwnerByEmail
-     * @parameter email The email address of the gym owner to retrieve.
-     * @description Retrieves a gym owner by their email address.
-     * @return FlipfitGymOwner object if found, null otherwise.
+     * @param email The email address of the gym owner to retrieve
+     * @return FlipfitGymOwner object if found, null otherwise
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @description Fetches a gym owner's complete profile from the database using their email address
      */
     FlipfitGymOwner getGymOwnerByEmail(String email);
 
     /**
+     * Adds a new gym owner to the database
      * @method addGymOwner
-     * @parameter owner The gym owner object to add.
-     * @description Adds a new gym owner to the database.
-     * @return True if added successfully, false otherwise.
+     * @param owner The gym owner object to add
+     * @return True if added successfully, false otherwise
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @description Inserts a new gym owner record into the database with all required details
      */
     boolean addGymOwner(FlipfitGymOwner owner);
 
     /**
+     * Updates an existing gym owner in the database
      * @method updateGymOwner
-     * @parameter owner The gym owner object with updated details.
-     * @description Updates an existing gym owner in the database.
-     * @return True if updated successfully, false otherwise.
+     * @param owner The gym owner object with updated details
+     * @return True if updated successfully, false otherwise
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @exception com.flipfit.exception.UserNotFoundException If the gym owner doesn't exist
+     * @description Updates the profile information of an existing gym owner in the database
      */
     boolean updateGymOwner(FlipfitGymOwner owner);
 
     /**
+     * Deletes a gym owner from the database
      * @method deleteGymOwner
-     * @parameter ownerId The ID of the gym owner to delete.
-     * @description Deletes a gym owner from the database.
-     * @return True if deleted successfully, false otherwise.
+     * @param ownerId The ID of the gym owner to delete
+     * @return True if deleted successfully, false otherwise
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @exception com.flipfit.exception.UserNotFoundException If the gym owner doesn't exist
+     * @description Removes a gym owner record from the database based on the provided ID
      */
     boolean deleteGymOwner(int ownerId);
 
     /**
+     * Retrieves all gym owners from the database
      * @method getAllGymOwners
-     * @description Retrieves all gym owners from the database.
-     * @return List of FlipfitGymOwner objects.
+     * @return List of all gym owners in the system
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @description Fetches all gym owner records from the database
      */
     List<FlipfitGymOwner> getAllGymOwners();
 
@@ -63,10 +78,13 @@ public interface FlipfitGymOwnerDAO {
     List<FlipfitGymOwner> getPendingApprovalOwners();
 
     /**
-     * @method approveGymOwner
-     * @parameter ownerId The ID of the gym owner to approve.
-     * @description Approves a gym owner in the database.
-     * @return True if approved successfully, false otherwise.
+     * Checks if a gym owner is approved
+     * @method isOwnerApproved
+     * @param ownerId The ID of the gym owner
+     * @return True if the owner is approved, false otherwise
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     * @exception com.flipfit.exception.UserNotFoundException If the gym owner doesn't exist
+     * @description Verifies if a gym owner has been approved in the system
      */
     boolean approveGymOwner(int ownerId);
 

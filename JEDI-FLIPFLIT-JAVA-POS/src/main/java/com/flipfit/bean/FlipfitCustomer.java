@@ -4,28 +4,32 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * @author Flipfit Team
- * @description Represents a customer in the Flipfit system, extending FlipfitUser with customer-specific properties.
+ * Represents a customer in the Flipfit system, extending FlipfitUser with customer-specific properties
+ * @author Khushi, Kritika
+ * @description This class models a customer user in the Flipfit system, extending the base user class
+ * with customer-specific attributes and behavior for booking gym slots
  */
 public class FlipfitCustomer extends FlipfitUser {
     private int customerId;
 
     /**
+     * Default constructor for FlipfitCustomer
      * @method FlipfitCustomer
-     * @description Default constructor for FlipfitCustomer.
+     * @description Creates an empty FlipfitCustomer object with default values
      */
     public FlipfitCustomer() {
         super();
     }
 
     /**
+     * Constructs a FlipfitCustomer with specified details
      * @method FlipfitCustomer
-     * @parameter name The name of the customer.
-     * @parameter email The email address of the customer.
-     * @parameter phoneNumber The phone number of the customer.
-     * @parameter password The password for the customer account.
-     * @parameter customerId The unique ID for the customer.
-     * @description Constructs a FlipfitCustomer with specified details.
+     * @param name The name of the customer
+     * @param email The email address of the customer
+     * @param phoneNumber The phone number of the customer
+     * @param password The password for the customer account
+     * @param customerId The unique ID for the customer
+     * @description Creates a complete customer profile with all required information
      */
     public FlipfitCustomer(String name, String email, String phoneNumber, String password, int customerId) {
         super(name, email, phoneNumber, password);
@@ -33,18 +37,20 @@ public class FlipfitCustomer extends FlipfitUser {
     }
 
     /**
+     * Gets the customer ID
      * @method getCustomerId
-     * @description Gets the customer ID.
-     * @return The unique customer ID.
+     * @return The unique customer ID
+     * @description Retrieves the system-generated unique identifier for this customer
      */
     public int getCustomerId() {
         return customerId;
     }
 
     /**
+     * Sets the customer ID
      * @method setCustomerId
-     * @parameter customerId The unique customer ID to set.
-     * @description Sets the customer ID.
+     * @param customerId The unique customer ID to set
+     * @description Updates the customer's unique identifier in the system
      */
     public void setCustomerId(int customerId) {
         this.customerId = customerId;

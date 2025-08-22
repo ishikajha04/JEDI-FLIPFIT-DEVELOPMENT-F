@@ -40,7 +40,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feat/assign-5-exceptions",
+    "git-widget-placeholder": "feat/assign-5-work",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/shubham.gupta8/Documents/Projects/JEDI-FLIPFLIT-JAVA-POS"
   },
@@ -52,6 +52,19 @@
     ]
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="JEDI-FLIPFLIT-JAVA-POS" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="JEDI-FLIPFLIT-JAVA-POS" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

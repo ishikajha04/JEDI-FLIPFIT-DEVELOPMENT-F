@@ -3,16 +3,21 @@ package com.flipfit.client;
 import java.util.Scanner;
 
 /**
- * @author Flipfit Team
- * @description Entry point for the Flipfit Gym System application, providing the main menu and role selection.
+ * Entry point for the Flipfit Gym System application, providing the main menu and role selection
+ * @author Sukhmani
+ * @description This class serves as the main entry point for the Flipfit Gym System application,
+ * allowing users to select their role and navigate to the appropriate interface
  */
 public class FlipfitApplication {
     private static Scanner scanner = new Scanner(System.in);
 
     /**
+     * Main method to start the Flipfit Gym System application and display the main menu
      * @method main
-     * @parameter args Command-line arguments.
-     * @description Main method to start the Flipfit Gym System application and display the main menu.
+     * @param args Command-line arguments
+     * @description Initializes the application, displays the welcome message, and handles
+     * user role selection to direct them to the appropriate client interface
+     * @exception java.lang.NumberFormatException If user enters non-numeric input for menu selection
      */
     public static void main(String[] args) {
         System.out.println("=================================================");
@@ -48,8 +53,9 @@ public class FlipfitApplication {
     }
 
     /**
+     * Displays the main menu for role selection in the Flipfit Gym System
      * @method displayMainMenu
-     * @description Displays the main menu for role selection in the Flipfit Gym System.
+     * @description Presents the available role options to the user, including Customer, Gym Owner, Admin, and Exit
      */
     private static void displayMainMenu() {
         System.out.println("\n=== FLIPFIT MAIN MENU ===");
@@ -61,6 +67,14 @@ public class FlipfitApplication {
         System.out.print("Enter your choice (1-4): ");
     }
 
+    /**
+     * Safely parses user input into an integer
+     * @method getIntInput
+     * @return Integer value of user input, or -1 if input is not a valid integer
+     * @exception java.lang.NumberFormatException Handled internally if user enters non-numeric input
+     * @description Reads user input from the console and attempts to parse it as an integer,
+     * returning -1 if the input cannot be parsed
+     */
     private static int getIntInput() {
         try {
             return Integer.parseInt(scanner.nextLine());

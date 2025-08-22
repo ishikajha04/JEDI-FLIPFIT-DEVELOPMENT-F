@@ -3,7 +3,7 @@ package com.flipfit.bean;
 import java.util.List;
 
 /**
- * @author Flipfit Team
+ * @author Rishita, Prerna
  * @description Represents an admin user in the Flipfit system, extending FlipfitUser with admin-specific properties.
  */
 public class FlipfitAdmin extends FlipfitUser {
@@ -49,67 +49,4 @@ public class FlipfitAdmin extends FlipfitUser {
         this.adminId = adminId;
     }
 
-    /**
-     * @method approveGymOwner
-     * @parameter ownerId
-     * @exception
-     * @description
-     */
-    public void approveGymOwner(int ownerId) {
-        // Business logic will be implemented in service layer
-    }
-
-    /**
-     * @method approveGymCenter
-     * @parameter centerId
-     * @exception
-     * @description
-     */
-    public void approveGymCenter(int centerId) {
-        // Business logic will be implemented in service layer
-    }
-
-    /**
-     * @method viewPendingOwnerRequests
-     * @parameter
-     * @exception
-     * @description
-     */
-    public List<FlipfitGymOwner> viewPendingOwnerRequests() {
-        // Business logic will be implemented in service layer
-        return null;
-    }
-
-    /**
-     * @method viewPendingCenterRequests
-     * @parameter
-     * @exception
-     * @description
-     */
-    public List<FlipfitGymCenter> viewPendingCenterRequests() {
-        // Business logic will be implemented in service layer
-        return null;
-    }
-
-    /**
-     * @method viewAllCenters
-     * @parameter
-     * @exception
-     * @description
-     */
-    public List<FlipfitGymCenter> viewAllCenters() {
-        // Business logic will be implemented in service layer
-        return null;
-    }
-
-    /**
-     * @method viewAllCustomers
-     * @parameter
-     * @exception
-     * @description
-     */
-    public List<FlipfitCustomer> viewAllCustomers() {
-        // Business logic will be implemented in service layer
-        return null;
-    }
 }

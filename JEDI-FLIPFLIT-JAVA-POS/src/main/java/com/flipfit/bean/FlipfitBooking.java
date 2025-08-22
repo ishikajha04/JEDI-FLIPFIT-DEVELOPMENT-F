@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * @author Flipfit Team
  * @description Represents a booking made by a customer for a slot at a gym center.
  */
-public class FlipfitBooking {
+public class    FlipfitBooking {
     private int bookingId;
     private int customerId;
     private int slotId;

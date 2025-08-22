@@ -1,29 +1,33 @@
 package com.flipfit.bean;
 
 /**
- * @author Flipfit Team
- * @description Represents a gym owner in the Flipfit system, extending FlipfitUser with owner-specific properties and approval status.
+ * Represents a gym owner in the Flipfit system, extending FlipfitUser with owner-specific properties and approval status
+ * @author Ishita, Shubham
+ * @description This class models a gym owner user in the Flipfit system, extending the base user class
+ * with owner-specific attributes including approval status for managing gym centers
  */
 public class FlipfitGymOwner extends FlipfitUser {
     private int ownerId;
     private boolean isApproved;
 
     /**
+     * Default constructor for FlipfitGymOwner
      * @method FlipfitGymOwner
-     * @description Default constructor for FlipfitGymOwner.
+     * @description Creates an empty FlipfitGymOwner object with default values
      */
     public FlipfitGymOwner() {
         super();
     }
 
     /**
+     * Constructs a FlipfitGymOwner with specified details
      * @method FlipfitGymOwner
-     * @parameter name The name of the gym owner.
-     * @parameter email The email address of the gym owner.
-     * @parameter phoneNumber The phone number of the gym owner.
-     * @parameter password The password for the gym owner account.
-     * @parameter ownerId The unique ID for the gym owner.
-     * @description Constructs a FlipfitGymOwner with specified details.
+     * @param name The name of the gym owner
+     * @param email The email address of the gym owner
+     * @param phoneNumber The phone number of the gym owner
+     * @param password The password for the gym owner account
+     * @param ownerId The unique ID for the gym owner
+     * @description Creates a complete gym owner profile with all required information, initially set as not approved
      */
     public FlipfitGymOwner(String name, String email, String phoneNumber, String password, int ownerId) {
         super(name, email, phoneNumber, password);
@@ -32,45 +36,50 @@ public class FlipfitGymOwner extends FlipfitUser {
     }
 
     /**
+     * Gets the owner ID
      * @method getOwnerId
-     * @description Gets the owner ID.
-     * @return The unique owner ID.
+     * @return The unique owner ID
+     * @description Retrieves the system-generated unique identifier for this gym owner
      */
     public int getOwnerId() {
         return ownerId;
     }
 
     /**
+     * Sets the owner ID
      * @method setOwnerId
-     * @parameter ownerId The unique owner ID to set.
-     * @description Sets the owner ID.
+     * @param ownerId The unique owner ID to set
+     * @description Updates the gym owner's unique identifier in the system
      */
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
     }
 
     /**
+     * Checks if the gym owner is approved
      * @method isApproved
-     * @description Checks if the gym owner is approved.
-     * @return True if approved, false otherwise.
+     * @return True if approved, false otherwise
+     * @description Determines whether this gym owner has been approved by an administrator
      */
     public boolean isApproved() {
         return isApproved;
     }
 
     /**
+     * Sets the approval status of the gym owner
      * @method setApproved
-     * @parameter approved The approval status to set.
-     * @description Sets the approval status of the gym owner.
+     * @param approved The approval status to set
+     * @description Updates the approval status of the gym owner, typically done by an administrator
      */
     public void setApproved(boolean approved) {
         isApproved = approved;
     }
 
     /**
+     * Returns a string representation of the FlipfitGymOwner object
      * @method toString
-     * @description Returns a string representation of the FlipfitGymOwner object.
-     * @return A string containing the owner ID, approval status, name, email, and phone number.
+     * @return A string containing the owner ID, approval status, name, email, and phone number
+     * @description Creates a formatted string representation of this gym owner for display purposes
      */
     @Override
     public String toString() {

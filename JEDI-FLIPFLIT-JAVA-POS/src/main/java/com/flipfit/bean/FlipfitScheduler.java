@@ -103,10 +103,4 @@ public class FlipfitScheduler {
     public void setSlot(FlipfitSlot slot) {
         this.slot = slot;
     }
-
-    public void updateSchedule() {
-    }
-
-    public void checkSchedule() {
-    }
 }

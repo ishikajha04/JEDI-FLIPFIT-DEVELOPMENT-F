@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * @author Flipfit Team
- * @description Client class for Flipfit Customer operations, providing menu and customer actions.
+ * Client class for Flipfit Customer operations, providing menu and customer actions
+ * @author Khushi, Kritika
+ * @description This class provides a command-line interface for customers to interact with the Flipfit system,
+ * including options for registration, login, booking slots, and managing profile
  */
 public class FlipfitCustomerClient {
     private FlipfitCustomerService customerService;
@@ -18,8 +20,10 @@ public class FlipfitCustomerClient {
     private FlipfitCustomer loggedInCustomer;
 
     /**
+     * Default constructor initializing customer service and scanner
      * @method FlipfitCustomerClient
-     * @description Default constructor initializing customer service and scanner.
+     * @description Initializes the customer client by creating an instance of the customer service implementation
+     * and setting up the scanner for user input
      */
     public FlipfitCustomerClient() {
         this.customerService = new FlipfitCustomerServiceImpl();
@@ -27,8 +31,11 @@ public class FlipfitCustomerClient {
     }
 
     /**
+     * Displays the customer menu and handles user input for customer actions
      * @method displayCustomerMenu
-     * @description Displays the customer menu and handles user input for customer actions.
+     * @description Presents different menu options based on whether a customer is logged in,
+     * and processes the user's selections accordingly
+     * @exception java.lang.NumberFormatException Handled internally if user enters non-numeric input
      */
     public void displayCustomerMenu() {
         while (true) {
@@ -51,7 +58,7 @@ public class FlipfitCustomerClient {
                         System.out.println("Thank you for using Flipfit!");
                         return;
                     default:
-                        System.out.println("Invalid option. Please try again.");
+                        System.out.println("Invalid option. Please choose 1-3.");
                 }
             } else {
                 System.out.println("Welcome, " + loggedInCustomer.getName() + "!");
@@ -107,6 +114,14 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Handles customer registration process
+     * @method registerCustomer
+     * @description Collects customer information, creates a new customer account,
+     * and registers the customer in the system
+     * @exception com.flipfit.exception.RegistrationNotDoneException If registration fails
+     * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
+     */
     private void registerCustomer() {
         System.out.println("\n=== CUSTOMER REGISTRATION ===");
         System.out.print("Enter your name: ");
@@ -130,6 +145,12 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Handles customer login process
+     * @method loginCustomer
+     * @description Authenticates a customer using their email and password credentials
+     * @exception com.flipfit.exception.UserNotFoundException If the customer with given email doesn't exist
+     */
     private void loginCustomer() {
         System.out.println("\n=== CUSTOMER LOGIN ===");
         System.out.print("Enter your email: ");
@@ -147,6 +168,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Displays available gym centers
+     * @method viewAvailableGymCenters
+     * @description Retrieves and displays a list of gym centers that are available for booking
+     */
     private void viewAvailableGymCenters() {
         System.out.println("\n=== AVAILABLE GYM CENTERS ===");
         List<FlipfitGymCenter> centers = customerService.viewAvailableGymCenters();
@@ -163,6 +189,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Searches gym centers by location
+     * @method searchGymCentersByLocation
+     * @description Allows the customer to search for gym centers based on a specific location
+     */
     private void searchGymCentersByLocation() {
         System.out.print("Enter location to search: ");
         String location = scanner.nextLine();
@@ -181,6 +212,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Displays available slots for a specific gym center and day
+     * @method viewAvailableSlots
+     * @description Shows the time slots available for booking in a selected gym center on a specific day
+     */
     private void viewAvailableSlots() {
         System.out.print("Enter Gym Center ID: ");
         int centerId = getIntInput();
@@ -203,6 +239,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Books a slot for the customer
+     * @method bookSlot
+     * @description Allows the customer to book a selected slot for a specific date
+     */
     private void bookSlot() {
         // First check if customer has any saved cards
         List<FlipfitCard> cards = customerService.getCustomerCards(loggedInCustomer.getCustomerId());
@@ -219,55 +260,32 @@ public class FlipfitCustomerClient {
 
         System.out.print("Enter Slot ID to book: ");
         int slotId = getIntInput();
-//    private void bookSlot() {
-//        System.out.print("Enter Slot ID to book: ");
-//        int slotId = getIntInput();
-////        scanner.nextLine();
-//
-//        System.out.print("Enter booking date (YYYY-MM-DD): ");
-//        String dateStr = scanner.nextLine();
-//
-//        try {
-//            LocalDate bookingDate = LocalDate.parse(dateStr);
-//            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
-//
-//            if (booking != null) {
-//                System.out.println("Booking successful! Booking ID: " + booking.getBookingId());
-//                System.out.println("Amount paid: ₹" + booking.getAmount());
-//            } else {
-////                System.out.println("Booking failed. Slot might not be available.");
-//                int waitlistPosition = customerService.addToWaitlist(loggedInCustomer.getCustomerId(), slotId);
-//                if (waitlistPosition > 0) {
-//                    System.out.println("Slot is full. You have been added to the waitlist. Your position is: " + waitlistPosition);
-//                } else {
-//                    System.out.println("Booking failed. Slot might not exist or be available.");
-//                }
-//            }
-//        } catch (DateTimeParseException e) {
-//            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-//        }
-//    }
 
-            System.out.print("Enter booking date (YYYY-MM-DD): ");
-            String dateStr = scanner.nextLine();
+        System.out.print("Enter booking date (YYYY-MM-DD): ");
+        String dateStr = scanner.nextLine();
 
-            try {
-                LocalDate bookingDate = LocalDate.parse(dateStr);
-                FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+        try {
+            LocalDate bookingDate = LocalDate.parse(dateStr);
+            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
 
-                if (booking != null) {
-                    System.out.println("\nBooking successful!");
-                    System.out.println("Booking ID: " + booking.getBookingId());
-                    System.out.println("Amount paid: ₹" + booking.getAmount());
-                    System.out.println("You will be redirected to the main menu...");
-                } else {
-                    System.out.println("Booking was not completed.");
-                }
-            } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            if (booking != null) {
+                System.out.println("\nBooking successful!");
+                System.out.println("Booking ID: " + booking.getBookingId());
+                System.out.println("Amount paid: ₹" + booking.getAmount());
+                System.out.println("You will be redirected to the main menu...");
+            } else {
+                System.out.println("Booking was not completed.");
             }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
         }
+    }
 
+    /**
+     * Displays the customer's bookings
+     * @method viewMyBookings
+     * @description Retrieves and shows the list of bookings made by the customer
+     */
     private void viewMyBookings() {
         System.out.println("\n=== MY BOOKINGS ===");
         List<FlipfitBooking> bookings = customerService.viewBookings(loggedInCustomer.getCustomerId());
@@ -286,6 +304,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Cancels a booking made by the customer
+     * @method cancelBooking
+     * @description Allows the customer to cancel a specific booking using its ID
+     */
     private void cancelBooking() {
         System.out.print("Enter Booking ID to cancel: ");
         int bookingId = getIntInput();
@@ -297,6 +320,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Displays the customer's profile information
+     * @method viewProfile
+     * @description Shows the details of the customer's profile including ID, name, email, and phone number
+     */
     private void viewProfile() {
         System.out.println("\n=== MY PROFILE ===");
         System.out.println("Customer ID: " + loggedInCustomer.getCustomerId());
@@ -305,6 +333,11 @@ public class FlipfitCustomerClient {
         System.out.println("Phone: " + loggedInCustomer.getPhoneNumber());
     }
 
+    /**
+     * Updates the customer's profile information
+     * @method updateProfile
+     * @description Allows the customer to update their profile details like name and phone number
+     */
     private void updateProfile() {
         System.out.println("\n=== UPDATE PROFILE ===");
         System.out.print("Enter new name (current: " + loggedInCustomer.getName() + "): ");
@@ -326,6 +359,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Manages the customer's payment methods
+     * @method managePaymentMethods
+     * @description Provides options to the customer for adding, removing, or modifying saved payment cards
+     */
     private void managePaymentMethods() {
         while (true) {
             System.out.println("\n=== PAYMENT METHODS MANAGEMENT ===");
@@ -358,6 +396,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Adds a new card for the customer
+     * @method addNewCard
+     * @description Collects card details from the customer and saves the new card information
+     */
     private void addNewCard() {
         System.out.println("\n=== ADD NEW CARD ===");
         FlipfitCard card = new FlipfitCard();
@@ -397,6 +440,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Removes a saved card for the customer
+     * @method removeCard
+     * @description Deletes the selected card from the customer's saved payment methods
+     */
     private void removeCard() {
         List<FlipfitCard> cards = viewSavedCards();
         if (cards.isEmpty()) {
@@ -413,6 +461,11 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Modifies an existing saved card for the customer
+     * @method modifyCard
+     * @description Updates the details of a selected card, such as holder name and expiry date
+     */
     private void modifyCard() {
         List<FlipfitCard> cards = viewSavedCards();
         if (cards.isEmpty()) {
@@ -459,6 +512,12 @@ public class FlipfitCustomerClient {
         }
     }
 
+    /**
+     * Views the customer's saved cards
+     * @method viewSavedCards
+     * @description Displays a list of cards saved by the customer for payments, with options to manage them
+     * @return List of customer's saved cards
+     */
     private List<FlipfitCard> viewSavedCards() {
         System.out.println("\n=== SAVED CARDS ===");
         List<FlipfitCard> cards = customerService.getCustomerCards(loggedInCustomer.getCustomerId());
@@ -477,11 +536,14 @@ public class FlipfitCustomerClient {
         }
         return cards;
     }
+
     /**
+     * Safely parses user input into an integer
      * @method getIntInput
-     * @description Utility method to get validated integer input
-     * @return int Valid integer input from user
-     * @exception NumberFormatException When non-numeric input is provided
+     * @return Integer value of user input, or -1 if input is not a valid integer
+     * @exception java.lang.NumberFormatException Handled internally if user enters non-numeric input
+     * @description Reads user input from the console and attempts to parse it as an integer,
+     * returning -1 if the input cannot be parsed
      */
     private int getIntInput() {
         while (true) {
