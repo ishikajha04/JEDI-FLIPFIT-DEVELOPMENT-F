@@ -146,7 +146,6 @@ public class FlipfitAdminClient {
             System.out.println("Action failed. Please check the owner ID.");
         }
     }
-
     private void viewPendingGymCenterRequests() {
         System.out.println("\n=== PENDING GYM CENTER REQUESTS ===");
         List<FlipfitGymCenter> pendingCenters = adminService.viewPendingGymCenterRequests();

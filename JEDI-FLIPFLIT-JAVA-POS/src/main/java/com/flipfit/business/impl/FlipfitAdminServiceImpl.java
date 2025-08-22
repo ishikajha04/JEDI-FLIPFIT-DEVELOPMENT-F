@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of FlipfitAdminService that uses MySQL DAO implementations
+ * @author Sukhmani
+ * @description Implementation of FlipfitAdminService that handles all administrator operations
  */
 public class FlipfitAdminServiceImpl implements FlipfitAdminService {
     private final FlipfitAdminDAO adminDAO;
@@ -17,6 +18,10 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
     private final FlipfitGymCenterDAO gymCenterDAO;
     private final FlipfitCustomerDAO customerDAO;
 
+    /**
+     * @method FlipfitAdminServiceImpl
+     * @description Constructor that initializes all required DAO instances
+     */
     public FlipfitAdminServiceImpl() {
         this.adminDAO = new FlipfitAdminDAOImpl();
         this.gymOwnerDAO = new FlipfitGymOwnerDAOImpl();
@@ -24,6 +29,13 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         this.customerDAO = new FlipfitCustomerDAOImpl();
     }
 
+    /**
+     * @method authenticateAdmin
+     * @parameter email Admin's email address
+     * @parameter password Admin's password
+     * @return FlipfitAdmin object if authentication successful, null otherwise
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public FlipfitAdmin authenticateAdmin(String email, String password) {
         try {
@@ -42,6 +54,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method viewPendingGymOwnerRequests
+     * @description Retrieves all pending gym owner registration requests
+     * @return List of FlipfitGymOwner objects with pending approval status
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public List<FlipfitGymOwner> viewPendingGymOwnerRequests() {
         try {
@@ -61,6 +79,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method approveGymOwner
+     * @parameter ownerId ID of the gym owner to approve
+     * @return boolean indicating success or failure of the operation
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public boolean approveGymOwner(int ownerId) {
         try {
@@ -86,6 +110,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method rejectGymOwner
+     * @parameter ownerId ID of the gym owner to reject
+     * @return boolean indicating success or failure of the operation
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public boolean rejectGymOwner(int ownerId) {
         try {
@@ -112,6 +142,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method viewPendingGymCenterRequests
+     * @description Retrieves all pending gym center registration requests
+     * @return List of FlipfitGymCenter objects with pending approval status
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public List<FlipfitGymCenter> viewPendingGymCenterRequests() {
         try {
@@ -131,6 +167,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method approveGymCenter
+     * @parameter centerId ID of the gym center to approve
+     * @return boolean indicating success or failure of the operation
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public boolean approveGymCenter(int centerId) {
         try {
@@ -156,6 +198,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method rejectGymCenter
+     * @parameter centerId ID of the gym center to reject
+     * @return boolean indicating success or failure of the operation
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public boolean rejectGymCenter(int centerId) {
         try {
@@ -182,6 +230,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method viewAllGymCenters
+     * @description Retrieves all gym centers in the system
+     * @return List of all FlipfitGymCenter objects
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public List<FlipfitGymCenter> viewAllGymCenters() {
         try {
@@ -201,6 +255,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method viewAllGymOwners
+     * @description Retrieves all gym owners in the system
+     * @return List of all FlipfitGymOwner objects
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public List<FlipfitGymOwner> viewAllGymOwners() {
         try {
@@ -220,6 +280,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method viewAllCustomers
+     * @description Retrieves all customers in the system
+     * @return List of all FlipfitCustomer objects
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public List<FlipfitCustomer> viewAllCustomers() {
         try {
@@ -239,6 +305,12 @@ public class FlipfitAdminServiceImpl implements FlipfitAdminService {
         }
     }
 
+    /**
+     * @method getAdminProfile
+     * @parameter adminId ID of the admin to retrieve
+     * @return FlipfitAdmin object if found, null otherwise
+     * @exception DatabaseException if database operation fails
+     */
     @Override
     public FlipfitAdmin getAdminProfile(int adminId) {
         try {

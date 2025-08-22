@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of FlipfitGymOwnerService that uses MySQL DAO implementations
+ * @author Sukhmani
+ * @description Implementation of FlipfitGymOwnerService interface that handles all gym owner operations
  */
 public class FlipfitGymOwnerServiceImpl implements FlipfitGymOwnerService {
     private final FlipfitGymOwnerDAO gymOwnerDAO;
@@ -17,6 +18,10 @@ public class FlipfitGymOwnerServiceImpl implements FlipfitGymOwnerService {
     private final FlipfitSlotDAO slotDAO;
     private final FlipfitBookingDAO bookingDAO;
 
+    /**
+     * @method FlipfitGymOwnerServiceImpl
+     * @description Constructor that initializes all required DAO instances
+     */
     public FlipfitGymOwnerServiceImpl() {
         this.gymOwnerDAO = new FlipfitGymOwnerDAOImpl();
         this.gymCenterDAO = new FlipfitGymCenterDAOImpl();

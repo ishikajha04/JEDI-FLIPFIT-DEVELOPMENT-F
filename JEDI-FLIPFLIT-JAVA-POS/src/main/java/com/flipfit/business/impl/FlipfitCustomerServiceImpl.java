@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Implementation of FlipfitCustomerService that uses MySQL DAO implementations
+ * @author Sukhmani
+ * @description Implementation of FlipfitCustomerService interface that handles all customer operations
  */
 public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     private final FlipfitCardDAO cardDAO;
@@ -24,6 +25,10 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     private final FlipfitBookingDAO bookingDAO;
     private final FlipfitWaitlistDAO waitlistDAO;
 
+    /**
+     * @method FlipfitCustomerServiceImpl
+     * @description Constructor that initializes all required DAO instances
+     */
     public FlipfitCustomerServiceImpl() {
         this.cardDAO = new FlipfitCardDAOImpl();
         this.customerDAO = new FlipfitCustomerDAOImpl();
@@ -497,4 +502,3 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
         return cardDAO.getCustomerCards(customerId);
     }
 }
-
