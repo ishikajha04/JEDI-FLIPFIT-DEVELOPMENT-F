@@ -21,12 +21,23 @@ public class App extends Application<Configuration>
     @Override
     public void run(Configuration c, Environment e) throws Exception {
         LOGGER.info("Registering REST resources");
-          e.jersey().register(new HelloRestController());
 
+        // Register existing Hello controller
+        e.jersey().register(new HelloRestController());
+
+        // Register Customer REST Controller
+        e.jersey().register(new FlipfitCustomerRestController());
+
+        // Register Gym Owner REST Controller
+        e.jersey().register(new FlipfitGymOwnerRestController());
+
+        // Register Admin REST Controller
+        e.jersey().register(new FlipfitAdminRestController());
+
+        LOGGER.info("All REST controllers registered successfully");
     }
 
     public static void main(String[] args) throws Exception {
         new App().run(args);
     }
 }
-
