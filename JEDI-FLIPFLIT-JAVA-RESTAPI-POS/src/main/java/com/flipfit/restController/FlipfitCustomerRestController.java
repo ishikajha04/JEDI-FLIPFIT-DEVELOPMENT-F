@@ -133,7 +133,7 @@ public class FlipfitCustomerRestController {
 
     /**
      * Book a slot for a customer
-     * @param bookingRequest Object containing booking details
+     * @param bookingRequest Object containing booking details including cardId for payment
      * @return Response with booking details or error
      */
     @POST
@@ -143,7 +143,8 @@ public class FlipfitCustomerRestController {
             FlipfitBooking booking = customerService.bookSlot(
                     bookingRequest.getCustomerId(),
                     bookingRequest.getSlotId(),
-                    LocalDate.parse(bookingRequest.getBookingDate()));
+                    LocalDate.parse(bookingRequest.getBookingDate()),
+                    bookingRequest.getCardId());
             if (booking != null) {
                 return Response.status(Response.Status.CREATED).entity(booking).build();
             } else {
@@ -299,6 +300,54 @@ public class FlipfitCustomerRestController {
     }
 
     /**
+     * Get customer's waitlist entries
+     * @param customerId ID of the customer
+     * @return Response with list of waitlisted bookings
+     */
+    @GET
+    @Path("/waitlist/{customerId}")
+    public Response getCustomerWaitlist(@PathParam("customerId") int customerId) {
+        try {
+            List<FlipfitBooking> waitlistBookings = customerService.viewBookings(customerId)
+                    .stream()
+                    .filter(booking -> booking.getStatus() == FlipfitBooking.BookingStatus.WAITLISTED)
+                    .collect(java.util.stream.Collectors.toList());
+            return Response.ok(waitlistBookings).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    /**
+     * Remove from waitlist
+     * @param bookingId ID of the waitlisted booking to remove
+     * @param customerId ID of the customer
+     * @return Response with success/failure message
+     */
+    @DELETE
+    @Path("/waitlist/{bookingId}/customer/{customerId}")
+    public Response removeFromWaitlist(@PathParam("bookingId") int bookingId,
+                                     @PathParam("customerId") int customerId) {
+        try {
+            // Use the same cancelBooking method since waitlisted bookings are still bookings
+            boolean result = customerService.cancelBooking(bookingId, customerId);
+            if (result) {
+                return Response.ok("{\"message\": \"Removed from waitlist successfully\"}").build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Failed to remove from waitlist\"}")
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    /**
      * Add payment card
      * @param card FlipfitCard object with card details
      * @return Response with success/failure message
@@ -317,6 +366,106 @@ public class FlipfitCustomerRestController {
                         .entity("{\"error\": \"Failed to add card\"}")
                         .build();
             }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    /**
+     * Get all payment cards for a customer
+     * @param customerId ID of the customer
+     * @return Response with list of customer's cards
+     */
+    @GET
+    @Path("/payment/cards/{customerId}")
+    public Response getCustomerCards(@PathParam("customerId") int customerId) {
+        try {
+            List<FlipfitCard> cards = customerService.getCustomerCards(customerId);
+            return Response.ok(cards).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    /**
+     * Update payment card details
+     * @param card FlipfitCard object with updated details
+     * @return Response with success/failure message
+     */
+    @PUT
+    @Path("/payment/card")
+    public Response updateCard(FlipfitCard card) {
+        try {
+            boolean result = customerService.updateCard(card);
+            if (result) {
+                return Response.ok("{\"message\": \"Card updated successfully\"}").build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Failed to update card\"}")
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    /**
+     * Remove payment card
+     * @param cardId ID of the card to remove
+     * @param customerId ID of the customer
+     * @return Response with success/failure message
+     */
+    @DELETE
+    @Path("/payment/cards/{cardId}/customer/{customerId}")
+    public Response removeCard(@PathParam("cardId") int cardId,
+                             @PathParam("customerId") int customerId) {
+        try {
+            boolean result = customerService.removeCard(cardId, customerId);
+            if (result) {
+                return Response.ok("{\"message\": \"Card removed successfully\"}").build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("{\"error\": \"Failed to remove card\"}")
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
+    /**
+     * Get bookings within a date range
+     * @param customerId ID of the customer
+     * @param startDate Start date in YYYY-MM-DD format
+     * @param endDate End date in YYYY-MM-DD format
+     * @return Response with list of bookings within the date range
+     */
+    @GET
+    @Path("/bookings/{customerId}/range/{startDate}/{endDate}")
+    public Response getCustomerBookingsByDateRange(@PathParam("customerId") int customerId,
+                                                 @PathParam("startDate") String startDate,
+                                                 @PathParam("endDate") String endDate) {
+        try {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+
+            List<FlipfitBooking> bookings = customerService.viewBookings(customerId)
+                    .stream()
+                    .filter(booking -> {
+                        LocalDate bookingDate = booking.getBookingDate();
+                        return !bookingDate.isBefore(start) && !bookingDate.isAfter(end);
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+
+            return Response.ok(bookings).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("{\"error\": \"" + e.getMessage() + "\"}")

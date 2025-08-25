@@ -184,7 +184,7 @@ public class FlipfitSlotDAOImpl implements FlipfitSlotDAO {
     @Override
     public List<FlipfitSlot> getAvailableSlotsByCenterAndDay(int centerId, String day) {
         String sql = "SELECT * FROM flipfit_slots WHERE center_id = ? AND day = ? " +
-                     "AND available_seats > 0 AND is_available = true";
+                     "";
         List<FlipfitSlot> slots = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;

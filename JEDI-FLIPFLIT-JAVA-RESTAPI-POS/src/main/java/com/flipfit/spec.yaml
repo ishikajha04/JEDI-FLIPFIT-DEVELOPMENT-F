@@ -1,0 +1,1471 @@
+openapi: 3.0.3
+info:
+  title: FlipFit REST API
+  version: 1.0.0
+  description: REST API for customers, gym owners, and admins in the FlipFit system.
+servers:
+  - url: http://localhost:8080
+    description: Dropwizard application base URL
+
+tags:
+  - name: Admin
+  - name: Customer
+  - name: Gym Owner
+  - name: Misc
+
+paths:
+  /helloRestService:
+    get:
+      tags: [Misc]
+      summary: Hello test endpoint
+      description: Returns a plain text hello message for sanity checks.
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: This is my First DropWizard Service!
+
+  /admin/login:
+    post:
+      tags: [Admin]
+      summary: Admin login
+      description: Authenticates an admin using email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginRequest'
+            example:
+              email: admin@flipfit.com
+              password: secret123
+      responses:
+        '200':
+          description: Authenticated admin details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitAdmin'
+              example: {}
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Invalid credentials
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-owners/pending:
+    get:
+      tags: [Admin]
+      summary: List pending gym owner requests
+      description: Returns all gym owners awaiting admin approval.
+      responses:
+        '200':
+          description: List of pending gym owners.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymOwner'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-owners/{ownerId}/approve:
+    put:
+      tags: [Admin]
+      summary: Approve a gym owner
+      description: Approves a pending gym owner by ID.
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          description: Gym owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Approval success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym owner approved successfully
+        '400':
+          description: Approval failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to approve gym owner
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-owners/{ownerId}/reject:
+    put:
+      tags: [Admin]
+      summary: Reject a gym owner
+      description: Rejects a pending gym owner by ID.
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          description: Gym owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Rejection success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym owner rejected successfully
+        '400':
+          description: Rejection failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to reject gym owner
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-centers/pending:
+    get:
+      tags: [Admin]
+      summary: List pending gym center requests
+      description: Returns all gym centers awaiting admin approval.
+      responses:
+        '200':
+          description: List of pending gym centers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymCenter'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-centers/{centerId}/approve:
+    put:
+      tags: [Admin]
+      summary: Approve a gym center
+      description: Approves a pending gym center by ID.
+      parameters:
+        - name: centerId
+          in: path
+          required: true
+          description: Gym center ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Approval success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym center approved successfully
+        '400':
+          description: Approval failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to approve gym center
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-centers/{centerId}/reject:
+    put:
+      tags: [Admin]
+      summary: Reject a gym center
+      description: Rejects a pending gym center by ID.
+      parameters:
+        - name: centerId
+          in: path
+          required: true
+          description: Gym center ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Rejection success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym center rejected successfully
+        '400':
+          description: Rejection failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to reject gym center
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-centers:
+    get:
+      tags: [Admin]
+      summary: List all gym centers
+      description: Returns all gym centers in the system.
+      responses:
+        '200':
+          description: List of gym centers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymCenter'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/gym-owners:
+    get:
+      tags: [Admin]
+      summary: List all gym owners
+      description: Returns all gym owners in the system.
+      responses:
+        '200':
+          description: List of gym owners.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymOwner'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/customers:
+    get:
+      tags: [Admin]
+      summary: List all customers
+      description: Returns all customers in the system.
+      responses:
+        '200':
+          description: List of customers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitCustomer'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/profile/{adminId}:
+    get:
+      tags: [Admin]
+      summary: Get admin profile
+      description: Returns the admin profile by ID.
+      parameters:
+        - name: adminId
+          in: path
+          required: true
+          description: Admin ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Admin profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitAdmin'
+              example: {}
+        '404':
+          description: Admin not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Admin not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/statistics:
+    get:
+      tags: [Admin]
+      summary: Get system statistics
+      description: Returns aggregated system statistics.
+      responses:
+        '200':
+          description: Statistics payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+              example:
+                totalCustomers: 120
+                totalGymOwners: 25
+                totalGymCenters: 40
+                pendingOwnerRequests: 3
+                pendingCenterRequests: 2
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/register:
+    post:
+      tags: [Customer]
+      summary: Register customer
+      description: Registers a new customer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitCustomer'
+            example: {}
+      responses:
+        '201':
+          description: Registration success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Customer registered successfully
+        '400':
+          description: Registration failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Registration failed. Email might already exist
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/login:
+    post:
+      tags: [Customer]
+      summary: Customer login
+      description: Authenticates a customer using email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: john.doe@example.com
+              password: secret123
+      responses:
+        '200':
+          description: Authenticated customer details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitCustomer'
+              example: {}
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Invalid credentials
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/gym-centers:
+    get:
+      tags: [Customer]
+      summary: List available gym centers
+      description: Returns all available gym centers.
+      responses:
+        '200':
+          description: List of gym centers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymCenter'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/gym-centers/location/{location}:
+    get:
+      tags: [Customer]
+      summary: Search gym centers by location
+      description: Returns gym centers filtered by location.
+      parameters:
+        - name: location
+          in: path
+          required: true
+          description: City or area name.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of gym centers at the given location.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymCenter'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/slots/{centerId}/{day}:
+    get:
+      tags: [Customer]
+      summary: Get available slots for a day
+      description: Returns available slots for a specific center and day of the week.
+      parameters:
+        - name: centerId
+          in: path
+          required: true
+          description: Gym center ID.
+          schema:
+            type: integer
+            format: int32
+        - name: day
+          in: path
+          required: true
+          description: Day of the week (e.g., MONDAY).
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of available slots.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitSlot'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/book-slot:
+    post:
+      tags: [Customer]
+      summary: Book a slot
+      description: Creates a booking for a customer and slot on a specific date using the specified payment card.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+            example:
+              customerId: 101
+              slotId: 555
+              bookingDate: "2025-01-15"
+              cardId: 789
+      responses:
+        '201':
+          description: Created booking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitBooking'
+              example: {}
+        '400':
+          description: Booking failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Booking failed - Invalid card selected or slot unavailable"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/bookings/{bookingId}/customer/{customerId}:
+    delete:
+      tags: [Customer]
+      summary: Cancel a booking
+      description: Cancels an existing booking for a customer.
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          description: Booking ID.
+          schema:
+            type: integer
+            format: int32
+        - name: customerId
+          in: path
+          required: true
+          description: Customer ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Cancellation success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Booking cancelled successfully
+        '400':
+          description: Cancellation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Cancellation failed
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/bookings/{customerId}:
+    get:
+      tags: [Customer]
+      summary: List customer bookings
+      description: Returns all bookings for a customer.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Customer ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of bookings.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitBooking'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/bookings/{customerId}/date/{date}:
+    get:
+      tags: [Customer]
+      summary: List bookings by date
+      description: Returns bookings for a customer on a specific date.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Customer ID.
+          schema:
+            type: integer
+            format: int32
+        - name: date
+          in: path
+          required: true
+          description: Date in YYYY-MM-DD format.
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: List of bookings on the date.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitBooking'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/profile/{customerId}:
+    get:
+      tags: [Customer]
+      summary: Get customer profile
+      description: Returns a customer profile by ID.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Customer ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Customer profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitCustomer'
+              example: {}
+        '404':
+          description: Customer not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Customer not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/profile:
+    put:
+      tags: [Customer]
+      summary: Update customer profile
+      description: Updates a customer profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitCustomer'
+            example: {}
+      responses:
+        '200':
+          description: Update success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Profile updated successfully
+        '400':
+          description: Update failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Profile update failed
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/waitlist:
+    post:
+      tags: [Customer]
+      summary: Add to waitlist
+      description: Adds a customer to the waitlist for a slot on a date.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaitlistRequest'
+            example:
+              customerId: 101
+              slotId: 555
+              bookingDate: 2025-01-15
+      responses:
+        '201':
+          description: Waitlist booking created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitBooking'
+              example: {}
+        '400':
+          description: Failed to add to waitlist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to add to waitlist
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/payment/card:
+    post:
+      tags: [Customer]
+      summary: Add payment card
+      description: Adds a payment card for a customer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitCard'
+            example:
+              customerId: 101
+              cardNumber: "1234567890123456"
+              cardHolderName: "John Doe"
+              expiryDate: "12/25"
+              cvv: "123"
+      responses:
+        '201':
+          description: Card added message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Card added successfully
+        '400':
+          description: Failed to add card.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to add card
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags: [Customer]
+      summary: Update payment card
+      description: Updates an existing payment card for a customer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitCard'
+            example:
+              cardId: 1
+              customerId: 101
+              cardNumber: "1234567890123456"
+              cardHolderName: "John Doe Updated"
+              expiryDate: "12/26"
+              cvv: "456"
+      responses:
+        '200':
+          description: Card updated message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Card updated successfully
+        '400':
+          description: Failed to update card.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to update card
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/payment/cards/{customerId}:
+    get:
+      tags: [Customer]
+      summary: Get customer payment cards
+      description: Returns all payment cards for a specific customer.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Customer ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of customer's payment cards.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitCard'
+              example:
+                - cardId: 1
+                  customerId: 101
+                  cardNumber: "****3456"
+                  cardHolderName: "John Doe"
+                  expiryDate: "12/25"
+                  cvv: "***"
+                - cardId: 2
+                  customerId: 101
+                  cardNumber: "****7890"
+                  cardHolderName: "John Doe"
+                  expiryDate: "06/26"
+                  cvv: "***"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /customer/payment/cards/{cardId}/customer/{customerId}:
+    delete:
+      tags: [Customer]
+      summary: Remove payment card
+      description: Removes a payment card for a customer.
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          description: Card ID to remove.
+          schema:
+            type: integer
+            format: int32
+        - name: customerId
+          in: path
+          required: true
+          description: Customer ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Card removed message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Card removed successfully
+        '400':
+          description: Failed to remove card.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to remove card
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/register:
+    post:
+      tags: [Gym Owner]
+      summary: Register gym owner
+      description: Registers a new gym owner (pending admin approval).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitGymOwner'
+            example: {}
+      responses:
+        '201':
+          description: Registration success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym owner registered successfully. Pending admin approval.
+        '400':
+          description: Registration failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Registration failed. Email might already exist
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/login:
+    post:
+      tags: [Gym Owner]
+      summary: Gym owner login
+      description: Authenticates a gym owner using email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerLoginRequest'
+            example:
+              email: owner@flipfit.com
+              password: secret123
+      responses:
+        '200':
+          description: Authenticated gym owner details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitGymOwner'
+              example: {}
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Invalid credentials
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/approval-status/{ownerId}:
+    get:
+      tags: [Gym Owner]
+      summary: Check owner approval status
+      description: Returns whether the owner is approved.
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          description: Gym owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Approval status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalStatus'
+              example:
+                approved: true
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/gym-centers:
+    post:
+      tags: [Gym Owner]
+      summary: Add gym center
+      description: Adds a gym center (pending admin approval).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitGymCenter'
+            example: {}
+      responses:
+        '201':
+          description: Add center success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym center added successfully. Pending admin approval.
+        '400':
+          description: Failed to add center.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to add gym center
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags: [Gym Owner]
+      summary: Update gym center
+      description: Updates a gym center owned by the owner.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitGymCenter'
+            example: {}
+      responses:
+        '200':
+          description: Update success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym center updated successfully
+        '400':
+          description: Failed to update center.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to update gym center
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/gym-centers/{centerId}/owner/{ownerId}:
+    delete:
+      tags: [Gym Owner]
+      summary: Remove gym center
+      description: Removes a gym center by ID for the owner.
+      parameters:
+        - name: centerId
+          in: path
+          required: true
+          description: Gym center ID.
+          schema:
+            type: integer
+            format: int32
+        - name: ownerId
+          in: path
+          required: true
+          description: Owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Removal success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Gym center removed successfully
+        '400':
+          description: Failed to remove center.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to remove gym center
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/gym-centers/owner/{ownerId}:
+    get:
+      tags: [Gym Owner]
+      summary: List owned gym centers
+      description: Returns all gym centers owned by the given owner.
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          description: Owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of owned centers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitGymCenter'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/slots:
+    post:
+      tags: [Gym Owner]
+      summary: Add slot
+      description: Adds a new slot to a gym center.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitSlot'
+            example: {}
+      responses:
+        '201':
+          description: Add slot success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Slot added successfully
+        '400':
+          description: Failed to add slot.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to add slot
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags: [Gym Owner]
+      summary: Update slot
+      description: Updates an existing slot.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitSlot'
+            example: {}
+      responses:
+        '200':
+          description: Update slot success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Slot updated successfully
+        '400':
+          description: Failed to update slot.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to update slot
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/slots/{slotId}/owner/{ownerId}:
+    delete:
+      tags: [Gym Owner]
+      summary: Remove slot
+      description: Removes a slot by ID for the owner.
+      parameters:
+        - name: slotId
+          in: path
+          required: true
+          description: Slot ID.
+          schema:
+            type: integer
+            format: int32
+        - name: ownerId
+          in: path
+          required: true
+          description: Owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Removal success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Slot removed successfully
+        '400':
+          description: Failed to remove slot.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Failed to remove slot
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/slots/center/{centerId}/owner/{ownerId}:
+    get:
+      tags: [Gym Owner]
+      summary: List slots for a center
+      description: Returns all slots for a center owned by the given owner.
+      parameters:
+        - name: centerId
+          in: path
+          required: true
+          description: Gym center ID.
+          schema:
+            type: integer
+            format: int32
+        - name: ownerId
+          in: path
+          required: true
+          description: Owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of slots.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitSlot'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/bookings/center/{centerId}/owner/{ownerId}:
+    get:
+      tags: [Gym Owner]
+      summary: List bookings for a center
+      description: Returns all bookings for a center owned by the given owner.
+      parameters:
+        - name: centerId
+          in: path
+          required: true
+          description: Gym center ID.
+          schema:
+            type: integer
+            format: int32
+        - name: ownerId
+          in: path
+          required: true
+          description: Owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of bookings.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlipfitBooking'
+              example: [ {} ]
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/profile/{ownerId}:
+    get:
+      tags: [Gym Owner]
+      summary: Get gym owner profile
+      description: Returns a gym owner profile by ID.
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          description: Owner ID.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Owner profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlipfitGymOwner'
+              example: {}
+        '404':
+          description: Owner not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Gym owner not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /gym-owner/profile:
+    put:
+      tags: [Gym Owner]
+      summary: Update gym owner profile
+      description: Updates a gym owner profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlipfitGymOwner'
+            example: {}
+      responses:
+        '200':
+          description: Update success message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Profile updated successfully
+        '400':
+          description: Update failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Profile update failed
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  responses:
+    InternalServerError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: An unexpected error occurred
+
+  schemas:
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    ApprovalStatus:
+      type: object
+      properties:
+        approved:
+          type: boolean
+      required: [approved]
+
+    Statistics:
+      type: object
+      properties:
+        totalCustomers:
+          type: integer
+          format: int32
+        totalGymOwners:
+          type: integer
+          format: int32
+        totalGymCenters:
+          type: integer
+          format: int32
+        pendingOwnerRequests:
+          type: integer
+          format: int32
+        pendingCenterRequests:
+          type: integer
+          format: int32
+      required:
+        - totalCustomers
+        - totalGymOwners
+        - totalGymCenters
+        - pendingOwnerRequests
+        - pendingCenterRequests
+
+    # Requests
+    AdminLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required: [email, password]
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required: [email, password]
+
+    OwnerLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required: [email, password]
+
+    BookingRequest:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int32
+          description: ID of the customer making the booking
+        slotId:
+          type: integer
+          format: int32
+          description: ID of the slot to be booked
+        bookingDate:
+          type: string
+          format: date
+          description: Date for the booking (YYYY-MM-DD format)
+        cardId:
+          type: integer
+          format: int32
+          description: ID of the payment card to use for the booking
+      required: [customerId, slotId, bookingDate, cardId]
+
+    WaitlistRequest:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int32
+        slotId:
+          type: integer
+          format: int32
+        bookingDate:
+          type: string
+          format: date
+      required: [customerId, slotId, bookingDate]
+
+    # Domain DTOs returned/accepted by services (structure unspecified in code)
+    FlipfitAdmin:
+      type: object
+      description: Admin object (fields depend on implementation).
+      additionalProperties: true
+      example: {}
+    FlipfitCustomer:
+      type: object
+      description: Customer object (fields depend on implementation).
+      additionalProperties: true
+      example: {}
+    FlipfitGymOwner:
+      type: object
+      description: Gym owner object (fields depend on implementation).
+      additionalProperties: true
+      example: {}
+    FlipfitGymCenter:
+      type: object
+      description: Gym center object (fields depend on implementation).
+      additionalProperties: true
+      example: {}
+    FlipfitSlot:
+      type: object
+      description: Slot object (fields depend on implementation).
+      additionalProperties: true
+      example: {}
+    FlipfitBooking:
+      type: object
+      description: Booking object (fields depend on implementation).
+      additionalProperties: true
+      example: {}
+    FlipfitCard:
+      type: object
+      description: Payment card object (fields depend on implementation).
+      additionalProperties: true
+      example: {}

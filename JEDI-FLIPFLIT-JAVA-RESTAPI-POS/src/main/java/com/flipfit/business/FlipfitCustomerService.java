@@ -73,13 +73,14 @@ public interface FlipfitCustomerService {
      * @param customerId ID of the customer
      * @param slotId ID of the slot to book
      * @param bookingDate Date for the booking
+     * @param cardId ID of the payment card to use
      * @return FlipfitBooking object if booking successful, null otherwise
      * @exception com.flipfit.exception.DatabaseException If there is an issue with the database operation
      * @exception com.flipfit.exception.SlotNotFoundException If the slot doesn't exist
      * @exception com.flipfit.exception.BookingNotConfirmedException If the booking cannot be confirmed
      * @description Creates a booking for a customer for a specific slot on a given date
      */
-    FlipfitBooking bookSlot(int customerId, int slotId, LocalDate bookingDate);
+    FlipfitBooking bookSlot(int customerId, int slotId, LocalDate bookingDate, int cardId);
 
     /**
      * Cancels an existing booking

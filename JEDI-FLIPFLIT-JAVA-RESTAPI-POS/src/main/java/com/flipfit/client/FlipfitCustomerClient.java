@@ -253,6 +253,12 @@ public class FlipfitCustomerClient {
             int addCard = getIntInput();
             if (addCard == 1) {
                 managePaymentMethods();
+                // Refresh the cards list after adding
+                cards = customerService.getCustomerCards(loggedInCustomer.getCustomerId());
+                if (cards.isEmpty()) {
+                    System.out.println("No cards available. Cannot proceed with booking.");
+                    return;
+                }
             } else {
                 return;
             }
@@ -264,9 +270,32 @@ public class FlipfitCustomerClient {
         System.out.print("Enter booking date (YYYY-MM-DD): ");
         String dateStr = scanner.nextLine();
 
+        // Display available cards and let user select
+        System.out.println("\nSelect a payment card:");
+        for (FlipfitCard card : cards) {
+            System.out.println(card.getCardId() + ". Card ending in " +
+                    card.getCardNumber().substring(card.getCardNumber().length() - 4));
+        }
+        System.out.print("Enter card ID to use for payment: ");
+        int selectedCardId = getIntInput();
+
+        // Validate selected card
+        boolean cardFound = false;
+        for (FlipfitCard card : cards) {
+            if (card.getCardId() == selectedCardId) {
+                cardFound = true;
+                break;
+            }
+        }
+
+        if (!cardFound) {
+            System.out.println("Invalid card ID selected. Booking cancelled.");
+            return;
+        }
+
         try {
             LocalDate bookingDate = LocalDate.parse(dateStr);
-            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate);
+            FlipfitBooking booking = customerService.bookSlot(loggedInCustomer.getCustomerId(), slotId, bookingDate, selectedCardId);
 
             if (booking != null) {
                 System.out.println("\nBooking successful!");
@@ -278,6 +307,8 @@ public class FlipfitCustomerClient {
             }
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+        } catch (Exception e) {
+            System.out.println("Booking failed: " + e.getMessage());
         }
     }
 

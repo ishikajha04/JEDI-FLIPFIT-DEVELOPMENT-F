@@ -7,6 +7,7 @@ public class BookingRequest {
     private int customerId;
     private int slotId;
     private String bookingDate;
+    private int cardId;
 
     // Default constructor
     public BookingRequest() {}
@@ -34,5 +35,13 @@ public class BookingRequest {
 
     public void setBookingDate(String bookingDate) {
         this.bookingDate = bookingDate;
+    }
+
+    public int getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(int cardId) {
+        this.cardId = cardId;
     }
 }

@@ -8,10 +8,8 @@ import com.flipfit.business.FlipfitCustomerService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * @author Sukhmani
@@ -51,23 +49,14 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             }
 
             boolean result = customerDAO.addCustomer(customer);
-            if (result) {
-                System.out.println("Customer registered successfully with ID: " + customer.getCustomerId());
-            } else {
+            if (!result) {
                 throw new RegistrationNotDoneException("Failed to register customer in the database");
             }
             return result;
-        } catch (RegistrationNotDoneException e) {
-            String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return false;
-        } catch (DatabaseException e) {
-            String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return false;
+        } catch (RegistrationNotDoneException | DatabaseException e) {
+            throw new RuntimeException(ExceptionHandler.handleException(e), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error during customer registration: " + e.getMessage());
-            return false;
+            throw new RuntimeException("Unexpected error during customer registration: " + e.getMessage(), e);
         }
     }
 
@@ -80,39 +69,25 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             }
 
             if (!customer.getPassword().equals(password)) {
-                System.out.println("Invalid password");
-                return null;
+                throw new UserNotFoundException("Invalid password for customer with email " + email);
             }
 
             return customer;
-        } catch (UserNotFoundException e) {
-            String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return null;
-        } catch (DatabaseException e) {
-            String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return null;
+        } catch (UserNotFoundException | DatabaseException e) {
+            throw new RuntimeException(ExceptionHandler.handleException(e), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error during authentication: " + e.getMessage());
-            return null;
+            throw new RuntimeException("Unexpected error during authentication: " + e.getMessage(), e);
         }
     }
 
     @Override
     public List<FlipfitGymCenter> viewAvailableGymCenters() {
         try {
-            List<FlipfitGymCenter> centers = gymCenterDAO.getApprovedGymCenters();
-            if (centers.isEmpty()) {
-                System.out.println("No approved gym centers available at this time");
-            }
-            return centers;
+            return gymCenterDAO.getApprovedGymCenters();
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving gym centers: " + e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException("Database error while retrieving gym centers: " + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error while retrieving gym centers: " + e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException("Unexpected error while retrieving gym centers: " + e.getMessage(), e);
         }
     }
 
@@ -120,21 +95,14 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     public List<FlipfitGymCenter> viewGymCentersByLocation(String location) {
         try {
             if (location == null || location.trim().isEmpty()) {
-                System.out.println("Error: Location cannot be empty");
-                return new ArrayList<>();
+                throw new IllegalArgumentException("Location cannot be empty");
             }
 
-            List<FlipfitGymCenter> centers = gymCenterDAO.getGymCentersByLocation(location);
-            if (centers.isEmpty()) {
-                System.out.println("No gym centers found at location: " + location);
-            }
-            return centers;
+            return gymCenterDAO.getGymCentersByLocation(location);
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving gym centers by location: " + e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException("Database error while retrieving gym centers by location: " + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error while retrieving gym centers by location: " + e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException("Unexpected error while retrieving gym centers by location: " + e.getMessage(), e);
         }
     }
 
@@ -142,31 +110,23 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     public List<FlipfitSlot> viewAvailableSlots(int centerId, String day) {
         try {
             if (centerId <= 0) {
-                System.out.println("Error: Invalid center ID");
-                return new ArrayList<>();
+                throw new IllegalArgumentException("Invalid center ID");
             }
 
             if (day == null || day.trim().isEmpty()) {
-                System.out.println("Error: Day cannot be empty");
-                return new ArrayList<>();
+                throw new IllegalArgumentException("Day cannot be empty");
             }
 
-            List<FlipfitSlot> slots = slotDAO.getAvailableSlotsByCenterAndDay(centerId, day);
-            if (slots.isEmpty()) {
-                System.out.println("No available slots for center ID " + centerId + " on " + day);
-            }
-            return slots;
+            return slotDAO.getAvailableSlotsByCenterAndDay(centerId, day);
         } catch (DatabaseException e) {
-            System.err.println("Database error while retrieving available slots: " + e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException("Database error while retrieving available slots: " + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error while retrieving available slots: " + e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException("Unexpected error while retrieving available slots: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public FlipfitBooking bookSlot(int customerId, int slotId, LocalDate bookingDate) {
+    public FlipfitBooking bookSlot(int customerId, int slotId, LocalDate bookingDate, int cardId) {
         try {
             // Validate booking date constraints
             if (!isValidBookingDate(bookingDate)) {
@@ -194,7 +154,6 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
 
             // Check if slot is full, if so add to waitlist
             if (slot.getAvailableSeats() <= 0) {
-                System.out.println("Slot is full. You have been added to the waitlist.");
                 return addToWaitlist(customerId, slotId, bookingDate);
             }
 
@@ -207,21 +166,10 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
                 throw new PaymentNotDoneException("No payment methods found. Please add a card first.");
             }
 
-            // Display available cards
-            System.out.println("\nSelect a card for payment:");
-            for (FlipfitCard card : cards) {
-                System.out.println(card.getCardId() + ". Card ending in " +
-                        card.getCardNumber().substring(card.getCardNumber().length() - 4));
-            }
-
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter card ID to use for payment: ");
-            int selectedCardId = scanner.nextInt();
-
             // Validate selected card
             boolean cardFound = false;
             for (FlipfitCard card : cards) {
-                if (card.getCardId() == selectedCardId) {
+                if (card.getCardId() == cardId) {
                     cardFound = true;
                     break;
                 }
@@ -246,34 +194,22 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             booking.setStatus(FlipfitBooking.BookingStatus.CONFIRMED); // Set initial status
             booking.setBookingTime(LocalDateTime.now());
 
-            System.out.println("\nConfirm payment of ₹" + slot.getPrice());
-            System.out.print("Enter 1 to confirm payment, 0 to cancel: ");
-            int confirm = scanner.nextInt();
-
-            if (confirm != 1) {
-                throw new PaymentNotDoneException("Payment cancelled by user.");
-            }
-
             if (bookingDAO.addBooking(booking)) {
                 // Update slot availability
                 int newAvailableSeats = slot.getAvailableSeats() - 1;
                 slotDAO.updateSlotAvailability(slotId, newAvailableSeats);
-                System.out.println("Payment successful!");
                 return booking;
             } else {
                 throw new BookingNotConfirmedException("Booking could not be confirmed. Please try again.");
             }
         } catch (SlotNotFoundException | UserNotFoundException | PaymentNotDoneException | BookingNotConfirmedException e) {
             String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return null;
+            throw new RuntimeException(errorMessage, e);
         } catch (DatabaseException e) {
             String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return null;
+            throw new RuntimeException(errorMessage, e);
         } catch (Exception e) {
-            System.err.println("Unexpected error during slot booking: " + e.getMessage());
-            return null;
+            throw new RuntimeException("Unexpected error during slot booking: " + e.getMessage(), e);
         }
     }
 
@@ -283,12 +219,10 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
         LocalDate maxBookingDate = today.plusWeeks(1);
 
         if (bookingDate.isBefore(tomorrow)) {
-            System.out.println("Cannot book for today or past dates. Please select from tomorrow onwards.");
             return false;
         }
 
         if (bookingDate.isAfter(maxBookingDate)) {
-            System.out.println("Cannot book more than 1 week in advance. Maximum booking date: " + maxBookingDate);
             return false;
         }
 
@@ -314,61 +248,21 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
     }
 
     private boolean handleOverlappingBookings(List<FlipfitBooking> existingBookings, FlipfitSlot newSlot) {
-        System.out.println("\nWarning: You already have bookings on this date:");
-
+        // Check for time overlap with existing bookings
         for (FlipfitBooking booking : existingBookings) {
             FlipfitSlot existingSlot = slotDAO.getSlotById(booking.getSlotId());
-            if (existingSlot != null) {
-                System.out.println("Booking ID: " + booking.getBookingId() +
-                                 " | Time: " + existingSlot.getStartTime() + " - " + existingSlot.getEndTime() +
-                                 " | Status: " + booking.getStatus());
-
-                // Check for time overlap
-                if (slotsOverlap(existingSlot, newSlot)) {
-                    System.out.println("Time slots overlap detected!");
-                    System.out.println("Existing slot: " + existingSlot.getStartTime() + " - " + existingSlot.getEndTime());
-                    System.out.println("New slot: " + newSlot.getStartTime() + " - " + newSlot.getEndTime());
-
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.println("\nChoose an option:");
-                    System.out.println("1. Cancel existing overlapping bookings and proceed with new booking");
-                    System.out.println("2. Keep both bookings (allow overlapping)");
-                    System.out.println("3. Cancel new booking");
-                    System.out.print("Enter your choice (1-3): ");
-
-                    int choice = scanner.nextInt();
-                    switch (choice) {
-                        case 1:
-                            // Cancel overlapping bookings
-                            for (FlipfitBooking overlappingBooking : existingBookings) {
-                                FlipfitSlot overlappingSlot = slotDAO.getSlotById(overlappingBooking.getSlotId());
-                                if (overlappingSlot != null && slotsOverlap(overlappingSlot, newSlot)) {
-                                    cancelBooking(overlappingBooking.getBookingId(), overlappingBooking.getCustomerId());
-                                    System.out.println("Cancelled overlapping booking ID: " + overlappingBooking.getBookingId());
-                                }
-                            }
-                            return true;
-                        case 2:
-                            System.out.println("Proceeding with overlapping bookings...");
-                            return true;
-                        case 3:
-                            System.out.println("New booking cancelled.");
-                            return false;
-                        default:
-                            System.out.println("Invalid choice. Cancelling new booking.");
-                            return false;
-                    }
-                }
+            if (existingSlot != null && slotsOverlap(existingSlot, newSlot)) {
+                // Time slots overlap - throw exception to let API handle it
+                throw new BookingNotConfirmedException(
+                    "Time slot conflict detected. Existing booking from " +
+                    existingSlot.getStartTime() + " to " + existingSlot.getEndTime() +
+                    " overlaps with new slot from " + newSlot.getStartTime() + " to " + newSlot.getEndTime()
+                );
             }
         }
 
-        // No overlaps found, but existing bookings on same date
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\nYou have existing bookings on this date but no time conflicts.");
-        System.out.print("Do you want to proceed with the new booking? (1 for Yes, 0 for No): ");
-        int proceed = scanner.nextInt();
-
-        return proceed == 1;
+        // No overlaps found, proceed with booking
+        return true;
     }
 
     private boolean slotsOverlap(FlipfitSlot slot1, FlipfitSlot slot2) {
@@ -414,8 +308,6 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             if (waitlist != null && !waitlist.getCustomerIds().isEmpty()) {
                 Integer nextCustomerId = waitlist.getNextCustomer();
                 if (nextCustomerId != null) {
-                    System.out.println("Promoting customer " + nextCustomerId + " from waitlist for slot " + slot.getSlotId());
-
                     // Find the existing waitlisted booking for this customer
                     FlipfitBooking waitlistBooking = bookingDAO.getBookingsByCustomerId(nextCustomerId)
                             .stream()
@@ -438,35 +330,11 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
             }
             return true;
         } catch (BookingNotConfirmedException | UserNotFoundException | SlotNotFoundException | DatabaseException e) {
-            String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return false;
+            throw new RuntimeException(ExceptionHandler.handleException(e), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error during booking cancellation: " + e.getMessage());
-            return false;
+            throw new RuntimeException("Unexpected error during booking cancellation: " + e.getMessage(), e);
         }
     }
-
-
-
-
-//    @Override
-//    public int addToWaitlist(int customerId, int slotId) {
-//        FlipfitWaitlist waitlist = waitlistDAO.getWaitlistBySlotId(slotId);
-//        if (waitlist == null) {
-//            waitlist = new FlipfitWaitlist();
-//            waitlist.setSlotId(slotId);
-//            waitlistDAO.addWaitlist(waitlist);
-//        }
-//
-//        if (waitlist.getCustomerIds().contains(customerId)) {
-//            return waitlist.getCustomerIds().size();
-//        }
-//
-//        waitlist.getCustomerIds().add(customerId);
-//        waitlistDAO.updateWaitlist(waitlist);
-//        return waitlist.getCustomerIds().size();
-//    }
 
     @Override
     public FlipfitBooking addToWaitlist(int customerId, int slotId, LocalDate bookingDate) {
@@ -509,15 +377,11 @@ public class FlipfitCustomerServiceImpl implements FlipfitCustomerService {
                 throw new BookingNotConfirmedException("Failed to add waitlist booking for slot " + slotId);
             }
 
-            System.out.println("Successfully added to waitlist for slot " + slotId + " on " + bookingDate);
             return waitlistBooking;
         } catch (SlotNotFoundException | UserNotFoundException | BookingNotConfirmedException | DatabaseException e) {
-            String errorMessage = ExceptionHandler.handleException(e);
-            System.err.println(errorMessage);
-            return null;
+            throw new RuntimeException(ExceptionHandler.handleException(e), e);
         } catch (Exception e) {
-            System.err.println("Unexpected error adding to waitlist: " + e.getMessage());
-            return null;
+            throw new RuntimeException("Unexpected error adding to waitlist: " + e.getMessage(), e);
         }
     }
 
